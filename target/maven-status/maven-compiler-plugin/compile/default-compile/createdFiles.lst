@@ -1,0 +1,6 @@
+com\wmp\controller\SkillController.class
+com\wmp\repository\CustomSkillRepository.class
+com\wmp\repository\SkillRepositoryImpl.class
+com\wmp\model\Skill.class
+com\wmp\repository\SkillRepository.class
+com\wmp\SkillTrackerApplication.class

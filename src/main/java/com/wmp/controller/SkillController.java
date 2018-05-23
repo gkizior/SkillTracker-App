@@ -6,7 +6,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wmp.model.Skill;
@@ -22,13 +25,13 @@ public class SkillController {
  @Autowired
  private SkillRepository skillRepository;
  
- @CrossOrigin(origins = "http://localhost:4200")
+ @CrossOrigin(origins = "http://localhost:4400")
  @RequestMapping("/")
  public String SpringBootSolrExample() {
       return "Welcome to Spring Boot solr Example";
  }
  
- @CrossOrigin(origins = "http://localhost:4200")
+ @CrossOrigin(origins = "http://localhost:4400")
  @RequestMapping("/delete")
  public String deleteAllSkills() {
      try { //delete all skills from solr core
@@ -39,7 +42,7 @@ public class SkillController {
      }
  }
  
- @CrossOrigin(origins = "http://localhost:4200")
+ @CrossOrigin(origins = "http://localhost:4400")
  @RequestMapping("/save")
  public String saveAllSkills() {
  //Store Skills
@@ -53,7 +56,7 @@ public class SkillController {
        return "3 emps saved!!!";
  }
  
- @CrossOrigin(origins = "http://localhost:4200")
+ @CrossOrigin(origins = "http://localhost:4400")
  @RequestMapping("/getAll")
  public List<Skill> getAllSkills() {
        List<Skill> skills = new ArrayList<>();
@@ -63,4 +66,18 @@ public class SkillController {
  }
  return skills;
  }
+ 
+ @CrossOrigin(origins = "http://localhost:4400")
+ @RequestMapping(value = "/get/{query}", method = RequestMethod.GET)
+ @ResponseBody
+ public List<Skill> getQuerySkills(@PathVariable String query) {
+	 
+       List<Skill> skills = new ArrayList<>();
+       // iterate all skills and add it to list
+       for (Skill skill : this.skillRepository.search(query)) {
+       skills.add(skill);
+ }
+ return skills;
+ }
+ 
 }

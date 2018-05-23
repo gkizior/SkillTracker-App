@@ -13,16 +13,16 @@ public class Skill {
 
 	@Id
 	@Field
-	private String emp_id;
+	private String empId;
 
 	@Field
-	private String first_name;
+	private String firstName;
 
 	@Field
-	private String last_name;
+	private String lastName;
 
 	@Field
-	private String career_level;
+	private String careerLevel;
 
 	@Field
 	private String[] skills;
@@ -30,46 +30,46 @@ public class Skill {
 	public Skill() {
 	}
 
-	public Skill(String emp_id, String first_name, String last_name, String career_level, String[] skills) {
-		this.emp_id = emp_id;
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.career_level = career_level;
+	public Skill(String empId, String firstName, String lastName, String careerLevel, String[] skills) {
+		this.empId = empId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.careerLevel = careerLevel;
 		this.skills = skills;
 	}
 
-	public void setEmpId(String emp_id) {
-		this.emp_id = emp_id;
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
 
 	public String getEmpId() {
-		return this.emp_id;
+		return this.empId;
 	}
 
-	public void setFirstName(String first_name) {
-		this.first_name = first_name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
 	public String getFirstName() {
-		return this.first_name;
+		return this.firstName;
 	}
-	
-	public void setLastName(String last_name) {
-		this.last_name = last_name;
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getLastName() {
-		return this.last_name;
+		return this.lastName;
 	}
-	
-	public void setCareerLevel(String career_level) {
-		this.career_level = career_level;
+
+	public void setCareerLevel(String careerLevel) {
+		this.careerLevel = careerLevel;
 	}
 
 	public String getCareerLevel() {
-		return this.career_level;
+		return this.careerLevel;
 	}
-	
+
 	public void setSkills(String[] skills) {
 		this.skills = skills;
 	}
@@ -80,11 +80,7 @@ public class Skill {
 
 	@Override
 	public String toString() {
-		return "Skill{" + 
-				"emp_id='" + emp_id + '\'' + 
-				", first_name='" + first_name + '\'' + 
-				", last_name='" + last_name + '\'' +
-				", career_level='" + career_level + '\'' +
-				", skill='" + skills + '\'' + '}';
+		return "Skill{" + "empId='" + empId + '\'' + ", firstName='" + firstName + '\'' + ", lastName='"
+				+ lastName + '\'' + ", careerLevel='" + careerLevel + '\'' + ", skill='" + skills + '\'' + '}';
 	}
 }
