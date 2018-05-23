@@ -25,17 +25,17 @@ public class Skill {
 	private String career_level;
 
 	@Field
-	private String skill;
+	private String[] skills;
 
 	public Skill() {
 	}
 
-	public Skill(String emp_id, String first_name, String last_name, String career_level, String skill) {
+	public Skill(String emp_id, String first_name, String last_name, String career_level, String[] skills) {
 		this.emp_id = emp_id;
 		this.first_name = first_name;
 		this.last_name = last_name;
 		this.career_level = career_level;
-		this.skill = skill;
+		this.skills = skills;
 	}
 
 	public void setEmpId(String emp_id) {
@@ -70,12 +70,12 @@ public class Skill {
 		return this.career_level;
 	}
 	
-	public void setSkill(String skill) {
-		this.skill = skill;
+	public void setSkills(String[] skills) {
+		this.skills = skills;
 	}
 
-	public String getSkill() {
-		return this.skill;
+	public String[] getSkills() {
+		return this.skills;
 	}
 
 	@Override
@@ -85,6 +85,6 @@ public class Skill {
 				", first_name='" + first_name + '\'' + 
 				", last_name='" + last_name + '\'' +
 				", career_level='" + career_level + '\'' +
-				", skill='" + skill + '\'' + '}';
+				", skill='" + skills + '\'' + '}';
 	}
 }
