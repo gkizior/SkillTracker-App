@@ -34,13 +34,13 @@ public class SkillController {
 	@Autowired
 	private SkillRepository skillRepository;
 
-	@CrossOrigin(origins = "http://localhost:4400")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/")
 	public String SpringBootSolrExample() {
 		return "Welcome to Spring Boot solr Example";
 	}
 
-	@CrossOrigin(origins = "http://localhost:4400")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/delete")
 	public String deleteAllSkills() {
 		try { // delete all skills from solr core
@@ -51,7 +51,7 @@ public class SkillController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:4400")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/save")
 	public String saveAllSkills() {
 		// Store Skills
@@ -64,7 +64,7 @@ public class SkillController {
 		return "3 emps saved!!!";
 	}
 
-	@CrossOrigin(origins = "http://localhost:4400")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getAll")
 	public List<Skill> getAllSkills() {
 		List<Skill> skills = new ArrayList<>();
@@ -75,7 +75,7 @@ public class SkillController {
 		return skills;
 	}
 
-	@CrossOrigin(origins = "http://localhost:4400")
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/get/{query}", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Skill> getQuerySkills(@PathVariable String query) throws UnsupportedOperationException {
@@ -88,6 +88,35 @@ public class SkillController {
 		for (int i = 1; i < words.length; i++) {
 			removeEmps = new ArrayList<>(this.skillRepository.findBySkillsContains(words[i]));
 			emps.retainAll(removeEmps);
+		}
+		return emps;
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/getEmployee/{employeeId}", method = RequestMethod.GET)
+	@ResponseBody
+	public Skill getEmployee(@PathVariable String employeeId) throws UnsupportedOperationException {
+
+		List<Skill> emps = new ArrayList<>();
+		emps = new ArrayList<>(this.skillRepository.findByEmpIdContains(employeeId));
+
+		return emps.get(0);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/findEmployee/{query}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Skill> findEmployee(@PathVariable String query) throws UnsupportedOperationException {
+
+		String[] words = query.split(" ");
+		List<Skill> emps = new ArrayList<>();
+		List<Skill> addEmps = new ArrayList<>();
+
+		emps = new ArrayList<>(this.skillRepository.findByQueryAnnotation(words[0]));
+		for (int i = 1; i < words.length; i++) {
+			addEmps = new ArrayList<>(this.skillRepository.findByQueryAnnotation(words[i]));
+			emps.removeAll(addEmps);
+			emps.addAll(addEmps);
 		}
 		return emps;
 	}

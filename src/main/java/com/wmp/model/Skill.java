@@ -13,6 +13,9 @@ public class Skill {
 
 	@Id
 	@Field
+	private String id;
+	
+	@Field
 	private String empId;
 
 	@Field
