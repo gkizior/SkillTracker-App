@@ -4,8 +4,8 @@ Spring
 
 1. Download Spring Tool Suite from https://spring.io/tools/sts/all
 2. Install Apahce Maven 
-2. Import project in STS
-3. Run as a Spring Boot App
+3. Import project in STS
+4. Run as a Spring Boot App
 
 Solr
 
@@ -17,4 +17,4 @@ Solr
 6. You can select the number of nodes, port, collection name, shard count, replica per shard count, and configuration - or just <Enter> through the prompts for default options
 7. Open browser, and go to http://localhost:8983/solr/#/
 8. Add fields to collection schema
-To restart after closing ``solr restart -e cloud``
+9. To restart after closing ``solr restart -e cloud``
