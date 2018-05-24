@@ -83,4 +83,10 @@ public class Skill {
 		return "Skill{" + "empId='" + empId + '\'' + ", firstName='" + firstName + '\'' + ", lastName='"
 				+ lastName + '\'' + ", careerLevel='" + careerLevel + '\'' + ", skill='" + skills + '\'' + '}';
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		Skill skill = (Skill)o;
+		return this.empId.equals(skill.empId) ? true : false;
+	}
 }
