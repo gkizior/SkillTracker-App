@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.solr.client.solrj.SolrQuery;
@@ -14,8 +15,11 @@ import org.apache.solr.client.solrj.impl.CloudSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -60,8 +64,10 @@ public class SkillController {
 		String[] emp3 = { "Java", "DOT NET", "Angular", "Spring", "Solr", "Spring Boot" };
 		skillRepository.save(Arrays.asList(new Skill("1", "Matthew", "Smith", "Consultant", emp1),
 				new Skill("2", "Mark", "Johnson", "Consultant", emp2),
-				new Skill("3", "Luke", "Williams", "Consultant", emp3)));
-		return "3 emps saved!!!";
+				new Skill("3", "Luke", "Williams", "Consultant", emp3),
+				new Skill("4", "John", "King", "Experienced Consultant", emp2),
+				new Skill("5", "Joseph", "Brown", "Senior Consultant", emp1)));
+		return "5 emps saved!!!";
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -102,6 +108,15 @@ public class SkillController {
 
 		return emps.get(0);
 	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/postEmployee", method = RequestMethod.POST)
+	public void postEmployee(@RequestBody Skill json) throws Exception {
+		Random rand = new Random();
+		json.setEmpId("" + rand.nextInt(10000));
+		skillRepository.save(json);
+	}
+
 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/findEmployee/{query}", method = RequestMethod.GET)
