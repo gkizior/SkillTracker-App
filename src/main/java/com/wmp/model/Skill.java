@@ -8,24 +8,45 @@ import org.springframework.data.solr.core.mapping.SolrDocument;
  * Created by Garrett Kizior on 5/22/2018.
  */
 
-@SolrDocument(solrCoreName = "wmpskilltracker")
+@SolrDocument(solrCoreName = "skilltracker")
 public class Skill {
 
 	@Id
-	@Field
-	private String id;
-	
-	@Field
-	private String empId;
+	@Field()
+	private String Id;
 
 	@Field
 	private String firstName;
 
 	@Field
 	private String lastName;
+	
+	@Field
+	private String dateOfBirth;
+	
+	@Field
+	private String dateOfJoin;
+	
+	@Field
+	private String address;
 
 	@Field
 	private String careerLevel;
+	
+	@Field
+	private String city;
+	
+	@Field
+	private String state;
+	
+	@Field
+	private String zipCode;
+	
+	@Field
+	private String created;
+	
+	@Field
+	private String updated;
 
 	@Field
 	private String[] skills;
@@ -33,48 +54,66 @@ public class Skill {
 	public Skill() {
 	}
 
-	public Skill(String empId, String firstName, String lastName, String careerLevel, String[] skills) {
-		this.empId = empId;
+	public Skill(String Id, String firstName, String lastName, String careerLevel, String address, String city, String state, String zipCode, String created, String updated, String[] skills) {
+		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.careerLevel = careerLevel;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zipCode = zipCode;
+		this.created = created;
+		this.updated = updated;
 		this.skills = skills;
 	}
 
-	public void setEmpId(String empId) {
-		this.empId = empId;
-	}
-
 	public String getEmpId() {
-		return this.empId;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
+		return this.Id;
 	}
 
 	public String getFirstName() {
 		return this.firstName;
 	}
 
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
 	public String getLastName() {
 		return this.lastName;
-	}
-
-	public void setCareerLevel(String careerLevel) {
-		this.careerLevel = careerLevel;
 	}
 
 	public String getCareerLevel() {
 		return this.careerLevel;
 	}
-
-	public void setSkills(String[] skills) {
-		this.skills = skills;
+	
+	public String getAddress() {
+		return this.address;
+	}
+	
+	public String getCity() {
+		return this.city;
+	}
+	
+	public String getState() {
+		return this.state;
+	}
+	
+	public String getZipCode() {
+		return this.zipCode;
+	}
+	
+	public String getCreatedAt() {
+		return this.created;
+	}
+	
+	public String getUpdatedAt() {
+		return this.updated;
+	}
+	
+	public String getDateOfBirth() {
+		return this.dateOfBirth;
+	}
+	
+	public String getDateOfJoin() {
+		return this.dateOfJoin;
 	}
 
 	public String[] getSkills() {
@@ -83,13 +122,13 @@ public class Skill {
 
 	@Override
 	public String toString() {
-		return "Skill{" + "empId='" + empId + '\'' + ", firstName='" + firstName + '\'' + ", lastName='"
-				+ lastName + '\'' + ", careerLevel='" + careerLevel + '\'' + ", skill='" + skills + '\'' + '}';
+		return "Skill{" + "empId='" + Id + '\'' + ", FirstName='" + firstName + '\'' + ", lastName='"
+				+ lastName + '\'' + ", careerLevel='" + careerLevel + '\'' + ", skills='" + skills + '\'' + '}';
 	}
 	
 	@Override
 	public boolean equals(Object o) {
-		Skill skill = (Skill)o;
-		return this.empId.equals(skill.empId) ? true : false;
+		Skill Skill = (Skill)o;
+		return this.Id.equals(Skill.Id) ? true : false;
 	}
 }
