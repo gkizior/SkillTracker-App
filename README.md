@@ -36,39 +36,43 @@ Solr
 12. Create a `db-data-config.xml` file in `./conf` and paste with correct, password, etc..
     ```xml
     <dataConfig>
-        <dataSource driver="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/skill_tracker" user="root" password="************" />
+        <dataSource driver="com.mysql.jdbc.Driver"  url="jdbc:mysql://localhost:3306/skill_tracker" user="root"  password="*************" />
         <document>
-            <entity name="employee" query="SELECT ID, FN, LN, DOB, DOJ, CL, ADDRESS, CITY, STATE, ZIPCODE, CREATED, UPDATED from employee">
+            <entity name="employee" query="SELECT ID, FN, LN, DOB, DOJ, CL, ADDRESS, CITY, STATE, ZIPCODE, CREATED, UPDATED FROM employee">
                 <field column="ID" name="Id" />
-                <field column="FN" name="FirstName" />
-                <field column="LN" name="LastName" />
-                <field column="DOB" name="DateOfBirth" />
-                <field column="DOJ" name="DateOfJoin" />
-                <field column="CL" name="CareerLevel" />
-                <field column="ADDRESS" name="Address" />
-                <field column="CITY" name="City" />
-                <field column="STATE" name="State" />
-                <field column="ZIPCODE" name="ZIPCode" />
-                <field column="CREATED" name="Created" />
-                <field column="UPDATED" name="Updated" />
+                <field column="FN" name="firstName" />
+                <field column="LN" name="lastName" />
+                <field column="DOB" name="dateOfBirth" />
+                <field column="DOJ" name="dateOfJoin" />
+                <field column="CL" name="careerLevel" />
+                <field column="ADDRESS" name="address" />
+                <field column="CITY" name="city" />
+                <field column="STATE" name="state" />
+                <field column="ZIPCODE" name="zipCode" />
+                <field column="CREATED" name="created" />
+                <field column="UPDATED" name="updated" />
+                <entity name="skill" pk="SKILLID" query="SELECT * FROM skill WHERE ID='${employee.ID}'">
+                    <field column="SKILL" name="skills" />
+                </entity>
             </entity>
         </document>
     </dataConfig>
     ```
 13. In `./managed-schema` add field tags with correct fields
     ```xml
-    <field name="Id" type="text_general" indexed="true" stored="true" required="true" />
-    <field name="FirstName" type="text_general" indexed="true" stored="true"/>
-    <field name="LastName" type="text_general" indexed="true" stored="true" />
-    <field name="DateOfBirth" type="text_general" indexed="true" stored="true"/>
-    <field name="DateOfJoin" type="text_general" indexed="true" stored="true"/>
-    <field name="CareerLevel" type="text_general" indexed="true" stored="true"/>
-    <field name="Address" type="text_general" indexed="true" stored="true"/>
-    <field name="City" type="text_general" indexed="true" stored="true"/>
-    <field name="State" type="text_general" indexed="true" stored="true"/>
-    <field name="ZIPCode" type="text_general" indexed="true" stored="true"/>
-    <field name="Created" type="text_general" indexed="true" stored="true"/>
-    <field name="Updated" type="text_general" indexed="true" stored="true"/>
+    <field name="Id" type="text_general" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="firstName" type="text_general" indexed="true" stored="true"/>
+    <field name="lastName" type="text_general" indexed="true" stored="true" />
+    <field name="dateOfBirth" type="text_general" indexed="true" stored="true"/>
+    <field name="dateOfJoin" type="text_general" indexed="true" stored="true"/>
+    <field name="careerLevel" type="text_general" indexed="true" stored="true"/>
+    <field name="address" type="text_general" indexed="true" stored="true"/>
+    <field name="city" type="text_general" indexed="true" stored="true"/>
+    <field name="state" type="text_general" indexed="true" stored="true"/>
+    <field name="zipCode" type="text_general" indexed="true" stored="true"/>
+    <field name="created" type="text_general" indexed="true" stored="true"/>
+    <field name="updated" type="text_general" indexed="true" stored="true"/>
+    <field name="skills" type="text_general" indexed="true" stored="true" multiValued="true"/>
     ```
 14. Open browser, and go to http://localhost:8983/solr/#/
 15. To stop solr, run `solr stop -all`
