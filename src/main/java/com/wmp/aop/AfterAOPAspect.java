@@ -1,5 +1,8 @@
 package com.wmp.aop;
 
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -15,15 +18,14 @@ import java.net.URLConnection;
 @Configuration
 public class AfterAOPAspect {
 
+	@SuppressWarnings("deprecation")
 	@After("execution(* com.wmp.controller.EmployeeController.*(..))")
-	public void afte(JoinPoint joinpoint) throws IOException {
-		System.out.print("Before ");
-		System.out.println(joinpoint.getSignature().getName());
-		
-		URL url = new URL("http://localhost:8983/solr/skilltracker/dataimport?command=full-import");
-		URLConnection conn = url.openConnection();
-		conn.connect();
-		System.out.print("- AFTER ");
+	public void after(JoinPoint joinpoint) throws IOException {
+		System.out.println("EmployeeController - " + joinpoint.getSignature().getName());
+		DefaultHttpClient client = new DefaultHttpClient();
+		client.execute(new HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
+		client.getConnectionManager().shutdown();
+		client = null;
 	}
 
 }
