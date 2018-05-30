@@ -70,7 +70,7 @@ Solr
     <field name="city" type="text_general" indexed="true" stored="true"/>
     <field name="state" type="text_general" indexed="true" stored="true"/>
     <field name="zipCode" type="text_general" indexed="true" stored="true"/>
-    <field name="created" type="text_general" indexed="true" stored="true"/>
+    <field name="created" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="updated" type="text_general" indexed="true" stored="true"/>
     <field name="skills" type="text_general" indexed="true" stored="true" multiValued="true"/>
     ```
