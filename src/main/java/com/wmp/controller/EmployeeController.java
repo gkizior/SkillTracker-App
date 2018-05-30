@@ -20,15 +20,18 @@ public class EmployeeController {
     EmployeeRepository employeeRepository;
 
  // Get All Employees
-    @GetMapping("/employees")
+//    @GetMapping("/employees")
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping("/employees")
     public List<Employee> getAllEmployees() {
         return employeeRepository.findAll();
     }
 
  // Create a new Employee
+	@CrossOrigin(origins = "http://localhost:4200")
     @PostMapping("/employees")
     public Employee createEmployee(@Valid @RequestBody Employee employee) {
-    	employee.setCreatedAt();
+		employee.setCreatedAt();
         return employeeRepository.save(employee);
     }
     

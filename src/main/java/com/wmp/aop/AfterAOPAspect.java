@@ -20,8 +20,18 @@ public class AfterAOPAspect {
 
 	@SuppressWarnings("deprecation")
 	@After("execution(* com.wmp.controller.EmployeeController.*(..))")
-	public void after(JoinPoint joinpoint) throws IOException {
+	public void afterEmployee(JoinPoint joinpoint) throws IOException {
 		System.out.println("EmployeeController - " + joinpoint.getSignature().getName());
+		DefaultHttpClient client = new DefaultHttpClient();
+		client.execute(new HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
+		client.getConnectionManager().shutdown();
+		client = null;
+	}
+	
+	@SuppressWarnings("deprecation")
+	@After("execution(* com.wmp.controller.SkillController.*(..))")
+	public void afterSkill(JoinPoint joinpoint) throws IOException {
+		System.out.println("SKillController - " + joinpoint.getSignature().getName());
 		DefaultHttpClient client = new DefaultHttpClient();
 		client.execute(new HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
 		client.getConnectionManager().shutdown();
