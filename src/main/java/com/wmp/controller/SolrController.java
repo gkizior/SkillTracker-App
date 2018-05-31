@@ -106,24 +106,22 @@ public class SolrController {
 	// skillRepository.save(json);
 	// }
 
-	// @CrossOrigin(origins = "http://localhost:4200")
-	// @RequestMapping(value = "/findEmployee/{query}", method = RequestMethod.GET)
-	// @ResponseBody
-	// public List<Skill> findEmployee(@PathVariable String query) throws
-	// UnsupportedOperationException {
-	//
-	// String[] words = query.split(" ");
-	// List<Skill> emps = new ArrayList<>();
-	// List<Skill> addEmps = new ArrayList<>();
-	//
-	// emps = new ArrayList<>(this.skillRepository.findByQueryAnnotation(words[0]));
-	// for (int i = 1; i < words.length; i++) {
-	// addEmps = new
-	// ArrayList<>(this.skillRepository.findByQueryAnnotation(words[i]));
-	// emps.removeAll(addEmps);
-	// emps.addAll(addEmps);
-	// }
-	// return emps;
-	// }
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/findEmployee/{query}", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Solr> findEmployee(@PathVariable String query) throws UnsupportedOperationException {
+
+		String[] words = query.split(" ");
+		List<Solr> emps = new ArrayList<>();
+		List<Solr> addEmps = new ArrayList<>();
+
+		emps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[0]));
+		for (int i = 1; i < words.length; i++) {
+			addEmps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[i]));
+			emps.removeAll(addEmps);
+			emps.addAll(addEmps);
+		}
+		return emps;
+	}
 
 }

@@ -2,6 +2,7 @@ package com.wmp.repository;
 
 import java.util.List;
 
+import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +22,6 @@ public interface SolrRepository extends SolrCrudRepository<Solr, String> {
 
 	// List<Skill> findByEmpIdContains(String id);
 
-	// @Query("empId:*?0* OR firstName:*?0* OR lastName:*?0* OR careerLevel:*?0* OR
-	// skills:*?0*")
-	// List<Skill> findByQueryAnnotation(String query);
+	@Query("Id:*?0* OR firstName:*?0* OR lastName:*?0* OR careerLevel:*?0* OR skills:*?0*")
+	List<Solr> findByQueryAnnotation(String query);
 }

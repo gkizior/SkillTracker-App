@@ -43,6 +43,7 @@ public class EmployeeController {
 	}
 
 	// Update a Employee
+	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping("/employees/{id}")
 	public Employee updateEmployee(@PathVariable(value = "id") Long employeeId,
 			@Valid @RequestBody Employee employeeDetails) {

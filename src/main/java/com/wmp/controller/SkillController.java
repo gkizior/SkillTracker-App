@@ -2,6 +2,7 @@ package com.wmp.controller;
 
 import com.wmp.model.Skill;
 import com.wmp.model.Skills;
+import com.wmp.model.Solr;
 import com.wmp.repository.SkillRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,30 +55,19 @@ public class SkillController {
 
 	// Get a Single Skill
 	@GetMapping("/skills/{id}")
-	public Skill getSkillById(@PathVariable(value = "id") long skillId) {
+	public List<Skill> getSkillById(@PathVariable(value = "id") long skillId) {
 		return skillRepository.findById(skillId);
 	}
 
-	// Update a Skill
-	@PutMapping("/skills/{id}")
-	public Skill updateSkill(@PathVariable(value = "id") Long skillId, @Valid @RequestBody Skill skillDetails) {
-
-		Skill skill = skillRepository.findById(skillId);
-
-		skill.setId(skillDetails.getId());
-		skill.setSkill(skillDetails.getSkill());
-
-		Skill updatedSkill = skillRepository.save(skill);
-		return updatedSkill;
-	}
-
 	// Delete a Skill
-	@DeleteMapping("/skills/{id}")
-	public ResponseEntity<?> deleteSkill(@PathVariable(value = "id") Long skillId) {
-		Skill skill = skillRepository.findById(skillId);
-
-		skillRepository.delete(skill);
-
+	@CrossOrigin(origins = "http://localhost:4200")
+	@DeleteMapping("/skills/{skillidentity}")
+	public ResponseEntity<?> deleteSkill(@PathVariable(value = "skillidentity") String skillidentity) {
+		String[] split = skillidentity.split(",");
+		if(split.length == 2) {
+			Skill skill = skillRepository.findByIdAndSkill(Long.parseLong(split[0]), split[1]);
+			if(skill != null) skillRepository.delete(skill);
+		}
 		return ResponseEntity.ok().build();
 	}
 }

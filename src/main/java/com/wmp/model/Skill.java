@@ -73,4 +73,15 @@ public class Skill implements Serializable {
 	public void setCreatedAt() {
 		this.createdAt = new Date();
 	}
+	
+	@Override
+	public String toString() {
+		return "ID: " + this.id + ", Skill: " + this.skill + ", SkillId: " + this.skillId;
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		Skill skill = (Skill) o;
+		return this.id == skill.id && this.skill == skill.skill ? true : false;
+	}
 }
