@@ -20,31 +20,31 @@ public class Solr {
 
 	@Field
 	private String lastName;
-	
+
 	@Field
 	private String dateOfBirth;
-	
+
 	@Field
 	private String dateOfJoin;
-	
+
 	@Field
 	private String address;
 
 	@Field
 	private String careerLevel;
-	
+
 	@Field
 	private String city;
-	
+
 	@Field
 	private String state;
-	
+
 	@Field
 	private String zipCode;
-	
+
 	@Field
 	private String created;
-	
+
 	@Field
 	private String updated;
 
@@ -54,7 +54,8 @@ public class Solr {
 	public Solr() {
 	}
 
-	public Solr(String Id, String firstName, String lastName, String careerLevel, String address, String city, String state, String zipCode, String created, String updated, String[] skills) {
+	public Solr(String Id, String firstName, String lastName, String careerLevel, String address, String city,
+			String state, String zipCode, String created, String updated, String[] skills) {
 		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -83,35 +84,35 @@ public class Solr {
 	public String getCareerLevel() {
 		return this.careerLevel;
 	}
-	
+
 	public String getAddress() {
 		return this.address;
 	}
-	
+
 	public String getCity() {
 		return this.city;
 	}
-	
+
 	public String getState() {
 		return this.state;
 	}
-	
+
 	public String getZipCode() {
 		return this.zipCode;
 	}
-	
+
 	public String getCreatedAt() {
 		return this.created;
 	}
-	
+
 	public String getUpdatedAt() {
 		return this.updated;
 	}
-	
+
 	public String getDateOfBirth() {
 		return this.dateOfBirth;
 	}
-	
+
 	public String getDateOfJoin() {
 		return this.dateOfJoin;
 	}
@@ -122,13 +123,13 @@ public class Solr {
 
 	@Override
 	public String toString() {
-		return "Skill{" + "empId='" + Id + '\'' + ", FirstName='" + firstName + '\'' + ", lastName='"
-				+ lastName + '\'' + ", careerLevel='" + careerLevel + '\'' + ", skills='" + skills + '\'' + '}';
+		return "Skill{" + "empId='" + Id + '\'' + ", FirstName='" + firstName + '\'' + ", lastName='" + lastName + '\''
+				+ ", careerLevel='" + careerLevel + '\'' + ", skills='" + skills + '\'' + '}';
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
-		Solr Skill = (Solr)o;
+		Solr Skill = (Solr) o;
 		return this.Id.equals(Skill.Id) ? true : false;
 	}
 }

@@ -1,16 +1,17 @@
 package com.wmp.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.math.BigInteger;
 import java.util.Date;
+
+/**
+ * Created by Garrett Kizior on 5/30/2018.
+ */
 
 @SuppressWarnings("serial")
 @Entity
@@ -23,14 +24,13 @@ public class Skill implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, unique = true, name = "SKILLID")
 	private long skillId;
-	
+
 	@Column(name = "ID")
 	private long id;
 
 	@Column(name = "SKILL")
 	private String skill;
 
-	
 	@Column(name = "CREATED", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	@CreatedDate
@@ -49,11 +49,11 @@ public class Skill implements Serializable {
 	public long getSkillId() {
 		return this.skillId;
 	}
-	
+
 	public long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
