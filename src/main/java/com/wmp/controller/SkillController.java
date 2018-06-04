@@ -82,8 +82,8 @@ public class SkillController {
 	
 	// Delete a Skill
 	@CrossOrigin(origins = "http://localhost:4200")
-	@PutMapping("/skills/delete/{id}")
-	public ResponseEntity<?> deleteSkillNew(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
+	@PutMapping("/skills/remove/{id}")
+	public ResponseEntity<?> removeSkill(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
 		for (String skill : skills.getSkills()) {
 			Skill toDelete = skillRepository.findByIdAndSkill(empId, skill);
 			skillRepository.delete(toDelete);

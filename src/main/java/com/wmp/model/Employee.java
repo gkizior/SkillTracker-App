@@ -53,7 +53,7 @@ public class Employee implements Serializable {
 	private String state;
 
 	@Column(name = "ZIPCODE")
-	private String ZIPCode;
+	private String zipcode;
 
 	@Column(name = "CREATED", nullable = false, updatable = false)
 	@Temporal(TemporalType.TIMESTAMP)
@@ -69,7 +69,7 @@ public class Employee implements Serializable {
 	}
 
 	public Employee(long id, String firstName, String lastName, Date dateOfBirth, Date dateOfJoin, String careerLevel,
-			String address, String city, String state, String ZIPCode, Date createdAt, Date updatedAt) {
+			String address, String city, String state, String zipcode, Date createdAt, Date updatedAt) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -79,7 +79,7 @@ public class Employee implements Serializable {
 		this.address = address;
 		this.city = city;
 		this.state = state;
-		this.ZIPCode = ZIPCode;
+		this.zipcode = zipcode;
 		this.createdAt = new Date();
 		this.updatedAt = this.createdAt;
 	}
@@ -176,15 +176,15 @@ public class Employee implements Serializable {
 		return this.state;
 	}
 
-	public void setZIPCode(String ZIPCode) {
-		if (ZIPCode != null && ZIPCode != this.ZIPCode) {
-			this.ZIPCode = ZIPCode;
+	public void setZipcode(String zipcode) {
+		if (zipcode != null && zipcode != this.zipcode) {
+			this.zipcode = zipcode;
 			this.setUpdatedAt();
 		}
 	}
 
-	public String getZIPCode() {
-		return this.ZIPCode;
+	public String getZipcode() {
+		return this.zipcode;
 	}
 
 	public Date getCreatedAt() {

@@ -40,7 +40,7 @@ public class Solr {
 	private String state;
 
 	@Field
-	private String zipCode;
+	private String zipcode;
 
 	@Field
 	private String created;
@@ -55,7 +55,7 @@ public class Solr {
 	}
 
 	public Solr(String Id, String firstName, String lastName, String careerLevel, String address, String city,
-			String state, String zipCode, String created, String updated, String[] skills) {
+			String state, String zipcode, String created, String updated, String[] skills) {
 		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -63,7 +63,7 @@ public class Solr {
 		this.address = address;
 		this.city = city;
 		this.state = state;
-		this.zipCode = zipCode;
+		this.zipcode = zipcode;
 		this.created = created;
 		this.updated = updated;
 		this.skills = skills;
@@ -97,8 +97,8 @@ public class Solr {
 		return this.state;
 	}
 
-	public String getZipCode() {
-		return this.zipCode;
+	public String getZipcode() {
+		return this.zipcode;
 	}
 
 	public String getCreatedAt() {

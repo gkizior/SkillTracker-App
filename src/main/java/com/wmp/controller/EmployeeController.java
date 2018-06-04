@@ -58,7 +58,7 @@ public class EmployeeController {
 		employee.setDateOfBirth(employeeDetails.getDateOfBirth());
 		employee.setDateOfJoin(employeeDetails.getDateOfJoin());
 		employee.setState(employeeDetails.getState());
-		employee.setZIPCode(employeeDetails.getZIPCode());
+		employee.setZipcode(employeeDetails.getZipcode());
 
 		Employee updatedEmployee = employeeRepository.save(employee);
 		return updatedEmployee;
