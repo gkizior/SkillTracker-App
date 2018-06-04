@@ -65,6 +65,7 @@ public class EmployeeController {
 	}
 
 	// Delete a Employee
+	@CrossOrigin(origins = "http://localhost:4200")
 	@DeleteMapping("/employees/{id}")
 	public ResponseEntity<?> deleteEmployee(@PathVariable(value = "id") Long employeeId) {
 		Employee employee = employeeRepository.findById(employeeId);

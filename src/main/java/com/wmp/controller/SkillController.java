@@ -70,13 +70,10 @@ public class SkillController {
 
 	// Delete a Skill
 	@CrossOrigin(origins = "http://localhost:4200")
-	@DeleteMapping("/skills/{skillidentity}")
-	public ResponseEntity<?> deleteSkill(@PathVariable(value = "skillidentity") String skillidentity) {
-		String[] split = skillidentity.split(",");
-		if(split.length == 2) {
-			Skill skill = skillRepository.findByIdAndSkill(Long.parseLong(split[0]), split[1]);
-			if(skill != null) skillRepository.delete(skill);
-		}
+	@DeleteMapping("/skills/{id}")
+	public ResponseEntity<?> deleteSkill(@PathVariable(value = "id") long id) {
+		List<Skill> skills = skillRepository.findById(id);
+		skillRepository.delete(skills);
 		return ResponseEntity.ok().build();
 	}
 	
