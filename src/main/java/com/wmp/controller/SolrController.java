@@ -63,13 +63,28 @@ public class SolrController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getAll")
-	public List<Solr> getAllSkills() {
+	public List<Solr> getAll() {
 		List<Solr> skills = new ArrayList<>();
 		// iterate all skills and add it to list
 		for (Solr skill : this.solrRepository.findAll()) {
 			skills.add(skill);
 		}
 		return skills;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping("/getAllSkills")
+	public List<String> getAllSkills() {
+		List<String> skillNames = new ArrayList<String>();
+
+		for (Solr skill : this.solrRepository.findAll()) {
+			for(String skillName : skill.getSkills()) {
+				if(!skillNames.contains(skillName)) {
+					skillNames.add(skillName);
+				}
+			}
+		}
+		return skillNames;
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -104,7 +119,7 @@ public class SolrController {
 	@RequestMapping(value = "/getStats", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Stat> getStats() {
-		List<Solr> solrList = this.getAllSkills();
+		List<Solr> solrList = this.getAll();
 		List<Stat> stats = new ArrayList<Stat>();
 		for(Solr solr : solrList) {
 			for(String skill : solr.getSkills()) {
