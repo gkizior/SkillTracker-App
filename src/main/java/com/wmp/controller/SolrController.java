@@ -1,5 +1,6 @@
 package com.wmp.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,6 +98,49 @@ public class SolrController {
 
 		return emps;
 	}
+	
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/getStats", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Stat> getStats() {
+		List<Solr> solrList = this.getAllSkills();
+		List<Stat> stats = new ArrayList<Stat>();
+		for(Solr solr : solrList) {
+			for(String skill : solr.getSkills()) {
+				boolean found = false;
+				for(Stat stat: stats) {
+					if(stat.getName().equals(skill)) {
+						found = true;
+						List<Series> addToSeries = stat.getSeries();
+						int index = stats.indexOf(stat);
+						boolean foundCareerLevel = false;
+						for(Series series : stat.getSeries()) {
+							if(series.getName().equals(solr.getCareerLevel())) {
+								series.setValue(series.getValue() + 1);
+								foundCareerLevel = true;
+							}
+						}
+						if(!foundCareerLevel) {
+							addToSeries.add(new Series(solr.getCareerLevel(), 1));
+						}
+						stat.setSeries(addToSeries);
+						stats.set(index, stat);
+					}
+				}
+				if(!found) {
+					Stat addStat = new Stat();
+					List<Series> addSeriesList = new ArrayList<Series>();
+					Series addSeries = new Series(solr.getCareerLevel(), 1);
+					addSeriesList.add(addSeries);
+					addStat.setName(skill);
+					addStat.setSeries(addSeriesList);
+					stats.add(addStat);
+				}
+			}
+		}
+		return stats;
+	}
 
 	// @CrossOrigin(origins = "http://localhost:4200")
 	// @RequestMapping(value = "/postEmployee", method = RequestMethod.POST)
@@ -122,6 +166,71 @@ public class SolrController {
 			emps.addAll(addEmps);
 		}
 		return emps;
+	}
+	
+	@SuppressWarnings("serial")
+	class Stat implements Serializable {
+		String name;
+		List<Series> series;
+		
+		public Stat(String name, List<Series> series) {
+			this.name = name;
+			this.series = series;
+		}
+		
+		public Stat() {
+			this.name = null;
+			this.series = new ArrayList<Series>();
+		}
+
+		public String getName() {
+			return this.name;
+		}
+		
+		public List<Series> getSeries() {
+			return this.series;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public void setSeries(List<Series> series) {
+			this.series = series;
+		}
+	}
+	
+	@SuppressWarnings("serial")
+	class Series implements Serializable {
+		
+		String name;
+		int value;
+		
+		public Series(String careerLevel, int i) {
+			this.name = careerLevel;
+			this.value = i;
+		}
+		
+		public Series() {
+			this.name = null;
+			this.value = 0;
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public int getValue() {
+			return this.value;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public void setValue(int value) {
+			this.value = value;
+		}
 	}
 
 }
