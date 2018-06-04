@@ -48,7 +48,7 @@ Solr
                 <field column="ADDRESS" name="address" />
                 <field column="CITY" name="city" />
                 <field column="STATE" name="state" />
-                <field column="ZIPCODE" name="zipCode" />
+                <field column="ZIPCODE" name="zipcode" />
                 <field column="CREATED" name="created" />
                 <field column="UPDATED" name="updated" />
                 <entity name="skill" pk="SKILLID" query="SELECT * FROM skill WHERE ID='${employee.ID}'">
@@ -69,7 +69,7 @@ Solr
     <field name="address" type="text_general" indexed="true" stored="true"/>
     <field name="city" type="text_general" indexed="true" stored="true"/>
     <field name="state" type="text_general" indexed="true" stored="true"/>
-    <field name="zipCode" type="text_general" indexed="true" stored="true"/>
+    <field name="zipcode" type="text_general" indexed="true" stored="true"/>
     <field name="created" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="updated" type="text_general" indexed="true" stored="true"/>
     <field name="skills" type="text_general" indexed="true" stored="true" multiValued="true"/>
