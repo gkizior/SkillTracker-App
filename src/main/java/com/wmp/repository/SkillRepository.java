@@ -14,7 +14,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface SkillRepository extends JpaRepository<Skill, Long> {
 
-	List<Skill> findById(long skillId);
+	List<Skill> findById(long id);
+	Skill findBySkillId(long skillId);
 	Skill findByIdAndSkill(long id, String skill);
 
 }

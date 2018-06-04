@@ -1,9 +1,5 @@
 package com.wmp;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +29,17 @@ public class SkillRepositoryTest {
 	@Test
 	public void findById_returnsCorrectId() {
 		// given
-		List<Skill> testSkillList = null;
-		testSkillList.add(new Skill(0, 1, "Java", new Date()));
-		entityManager.persist(testSkillList);
+		Skill skill = new Skill();
+		skill.setId(1);
+		skill.setSkill("Java");
+		entityManager.persist(skill);
 		entityManager.flush();
 
 		// when
-		List<Skill> found = skillRepository.findById(1);
+		Skill found = skillRepository.findBySkillId(1);
 
 		// then
-		assertThat(found).isEqualTo(testSkillList);
+		assertThat(found).isEqualTo(skill);
 	}
 
 }
