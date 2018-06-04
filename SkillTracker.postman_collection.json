@@ -1,0 +1,223 @@
+{
+	"info": {
+		"_postman_id": "ba07567d-6afc-495f-9a72-39219651655d",
+		"name": "SkillTracker",
+		"description": "Skill Tracker Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Solr Skill query",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a311bb81-c533-4fa5-9de3-9de900d95a19",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "http://localhost:8080/get/Java",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"get",
+						"Java"
+					]
+				},
+				"description": "Get all employees based on a skills query"
+			},
+			"response": []
+		},
+		{
+			"name": "Solr Get all skill names",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "da79ae95-d290-4f30-8688-cc5e67615282",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Content-Type is present\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "localhost:8080/getAllSkills",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getAllSkills"
+					],
+					"query": [
+						{
+							"key": "filter",
+							"value": "",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Returns the all the unique skills names"
+			},
+			"response": []
+		},
+		{
+			"name": "Solr Get all employees/skills",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d63344bb-95e7-4c28-90e4-b00e74b6cbd0",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/getAll",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solr Get stats",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "941bbdaa-ec18-4b53-8f42-b1275fda22ac",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/getStats",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"getStats"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Solr Find employee by any field",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7e669aa3-e09e-494d-a1bd-69ffd714c10f",
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "localhost:8080/findEmployee/Java",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"findEmployee",
+						"Java"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

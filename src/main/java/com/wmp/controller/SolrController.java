@@ -78,9 +78,11 @@ public class SolrController {
 		List<String> skillNames = new ArrayList<String>();
 
 		for (Solr skill : this.solrRepository.findAll()) {
-			for(String skillName : skill.getSkills()) {
-				if(!skillNames.contains(skillName)) {
-					skillNames.add(skillName);
+			if(skill.getSkills() != null) {
+				for(String skillName : skill.getSkills()) {
+					if(!skillNames.contains(skillName)) {
+						skillNames.add(skillName);
+					}
 				}
 			}
 		}
@@ -122,35 +124,37 @@ public class SolrController {
 		List<Solr> solrList = this.getAll();
 		List<Stat> stats = new ArrayList<Stat>();
 		for(Solr solr : solrList) {
-			for(String skill : solr.getSkills()) {
-				boolean found = false;
-				for(Stat stat: stats) {
-					if(stat.getName().equals(skill)) {
-						found = true;
-						List<Series> addToSeries = stat.getSeries();
-						int index = stats.indexOf(stat);
-						boolean foundCareerLevel = false;
-						for(Series series : stat.getSeries()) {
-							if(series.getName().equals(solr.getCareerLevel())) {
-								series.setValue(series.getValue() + 1);
-								foundCareerLevel = true;
+			if(solr.getSkills() != null) {
+				for(String skill : solr.getSkills()) {
+					boolean found = false;
+					for(Stat stat: stats) {
+						if(stat.getName().equals(skill)) {
+							found = true;
+							List<Series> addToSeries = stat.getSeries();
+							int index = stats.indexOf(stat);
+							boolean foundCareerLevel = false;
+							for(Series series : stat.getSeries()) {
+								if(series.getName().equals(solr.getCareerLevel())) {
+									series.setValue(series.getValue() + 1);
+									foundCareerLevel = true;
+								}
 							}
+							if(!foundCareerLevel) {
+								addToSeries.add(new Series(solr.getCareerLevel(), 1));
+							}
+							stat.setSeries(addToSeries);
+							stats.set(index, stat);
 						}
-						if(!foundCareerLevel) {
-							addToSeries.add(new Series(solr.getCareerLevel(), 1));
-						}
-						stat.setSeries(addToSeries);
-						stats.set(index, stat);
 					}
-				}
-				if(!found) {
-					Stat addStat = new Stat();
-					List<Series> addSeriesList = new ArrayList<Series>();
-					Series addSeries = new Series(solr.getCareerLevel(), 1);
-					addSeriesList.add(addSeries);
-					addStat.setName(skill);
-					addStat.setSeries(addSeriesList);
-					stats.add(addStat);
+					if(!found) {
+						Stat addStat = new Stat();
+						List<Series> addSeriesList = new ArrayList<Series>();
+						Series addSeries = new Series(solr.getCareerLevel(), 1);
+						addSeriesList.add(addSeries);
+						addStat.setName(skill);
+						addStat.setSeries(addSeriesList);
+						stats.add(addStat);
+					}
 				}
 			}
 		}
