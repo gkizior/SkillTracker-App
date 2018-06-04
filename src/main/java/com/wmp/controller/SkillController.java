@@ -2,16 +2,16 @@ package com.wmp.controller;
 
 import com.wmp.model.Skill;
 import com.wmp.model.Skills;
-import com.wmp.model.Solr;
 import com.wmp.repository.SkillRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,13 +44,22 @@ public class SkillController {
 	// Create a new Skill
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/skills/{id}")
-	public void createSkills(@PathVariable(value = "id") long skillId, @Valid @RequestBody Skills skills) {
+	public ResponseEntity<?> createSkills(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
+		List<Skill> skillsToAdd = new ArrayList<Skill>();
 		for (String skill : skills.getSkills()) {
-			Skill temp = new Skill();
-			temp.setId(skillId);
-			temp.setSkill(skill);
-			skillRepository.save(temp);
+			if(skillRepository.findByIdAndSkill(empId, skill) == null) {
+				Skill temp = new Skill();
+				temp.setId(empId);
+				temp.setSkill(skill);
+				skillsToAdd.add(temp);
+			} else {
+				return ResponseEntity.badRequest().build();
+			}
 		}
+		for(Skill skill : skillsToAdd) {
+			skillRepository.save(skill);
+		}
+		return ResponseEntity.ok().build();
 	}
 
 	// Get a Single Skill
@@ -67,6 +76,17 @@ public class SkillController {
 		if(split.length == 2) {
 			Skill skill = skillRepository.findByIdAndSkill(Long.parseLong(split[0]), split[1]);
 			if(skill != null) skillRepository.delete(skill);
+		}
+		return ResponseEntity.ok().build();
+	}
+	
+	// Delete a Skill
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PutMapping("/skills/delete/{id}")
+	public ResponseEntity<?> deleteSkillNew(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
+		for (String skill : skills.getSkills()) {
+			Skill toDelete = skillRepository.findByIdAndSkill(empId, skill);
+			skillRepository.delete(toDelete);
 		}
 		return ResponseEntity.ok().build();
 	}

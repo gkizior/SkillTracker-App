@@ -1,6 +1,8 @@
 package com.wmp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,15 +33,16 @@ public class SkillRepositoryTest {
 	@Test
 	public void findById_returnsCorrectId() {
 		// given
-		Skill testSkill = new Skill(0, 1, "Java", new Date());
-		entityManager.persist(testSkill);
+		List<Skill> testSkillList = null;
+		testSkillList.add(new Skill(0, 1, "Java", new Date()));
+		entityManager.persist(testSkillList);
 		entityManager.flush();
 
 		// when
-//		Skill found = skillRepository.findById(testSkill.getId());
-//
-//		// then
-//		assertThat(found.getId()).isEqualTo(testSkill.getId());
+		List<Skill> found = skillRepository.findById(1);
+
+		// then
+		assertThat(found).isEqualTo(testSkillList);
 	}
 
 }
