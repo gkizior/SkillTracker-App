@@ -1,5 +1,6 @@
 package com.wmp.controller;
 
+import com.wmp.helper.SkillsOnly;
 import com.wmp.model.Skill;
 import com.wmp.model.Skills;
 import com.wmp.repository.SkillRepository;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +35,20 @@ public class SkillController {
 		return skillRepository.findAll();
 	}
 
+	// @GetMapping("/skills")
+	@CrossOrigin(origins = "http://localhost:4200")
+	@GetMapping("/skills/unique")
+	public List<String> getAllUniqueSkills() {
+		List<String> uniqueSkills = new ArrayList<String>();
+		List<SkillsOnly> obj = new ArrayList<SkillsOnly>(skillRepository.findDistinctBy());
+		
+		for(SkillsOnly o : obj) {
+			uniqueSkills.add(o.getSkill());
+		}
+		
+		return uniqueSkills;
+	}
+
 	// Create a new Skill
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/skills")
@@ -47,7 +63,7 @@ public class SkillController {
 	public ResponseEntity<?> createSkills(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
 		List<Skill> skillsToAdd = new ArrayList<Skill>();
 		for (String skill : skills.getSkills()) {
-			if(skillRepository.findByIdAndSkill(empId, skill) == null) {
+			if (skillRepository.findByIdAndSkill(empId, skill) == null) {
 				Skill temp = new Skill();
 				temp.setId(empId);
 				temp.setSkill(skill);
@@ -56,7 +72,7 @@ public class SkillController {
 				return ResponseEntity.badRequest().build();
 			}
 		}
-		for(Skill skill : skillsToAdd) {
+		for (Skill skill : skillsToAdd) {
 			skillRepository.save(skill);
 		}
 		return ResponseEntity.ok().build();
@@ -76,15 +92,24 @@ public class SkillController {
 		skillRepository.delete(skills);
 		return ResponseEntity.ok().build();
 	}
-	
+
 	// Delete a Skill
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping("/skills/remove/{id}")
-	public ResponseEntity<?> removeSkill(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
+	public ResponseEntity<?> removeSkills(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
 		for (String skill : skills.getSkills()) {
 			Skill toDelete = skillRepository.findByIdAndSkill(empId, skill);
 			skillRepository.delete(toDelete);
 		}
 		return ResponseEntity.ok().build();
 	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@DeleteMapping("/skills/removeAll/{skill}")
+	public ResponseEntity<?> removeSkillBySkill(@PathVariable(value = "skill") String skill) {
+		List<Skill> skills = skillRepository.findBySkill(skill);
+		skillRepository.delete(skills);
+		return ResponseEntity.ok().build();
+	}
+	
 }

@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wmp.helper.GraphMatch;
+import com.wmp.helper.Match;
+import com.wmp.helper.MatchBody;
+import com.wmp.helper.Series;
+import com.wmp.helper.Stat;
 import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
@@ -32,6 +37,9 @@ public class SolrController {
 
 	@Autowired
 	private SolrRepository solrRepository;
+
+	@Autowired
+	private SkillController skillController;
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/")
@@ -49,25 +57,6 @@ public class SolrController {
 			return "Failed to delete emps";
 		}
 	}
-
-	// @CrossOrigin(origins = "http://localhost:4200")
-	// @RequestMapping("/save")
-	// public String saveAllSkills() {
-	// // Store Skills
-	// String[] emp1 = { "Java", "AWS", "DOT NET", "Angular", "Spring", "Solr",
-	// "Spring Boot" };
-	// String[] emp2 = { "AWS", "DOT NET", "Angular", "Spring", "Solr", "Spring
-	// Boot" };
-	// String[] emp3 = { "Java", "DOT NET", "Angular", "Spring", "Solr", "Spring
-	// Boot" };
-	// skillRepository.save(Arrays.asList(new Skill("1", "Matthew", "Smith",
-	// "Consultant", emp1),
-	// new Skill("2", "Mark", "Johnson", "Consultant", emp2),
-	// new Skill("3", "Luke", "Williams", "Consultant", emp3),
-	// new Skill("4", "John", "King", "Experienced Consultant", emp2),
-	// new Skill("5", "Joseph", "Brown", "Senior Consultant", emp1)));
-	// return "5 emps saved!!!";
-	// }
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getAll")
@@ -125,6 +114,37 @@ public class SolrController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/getSkillGraph", method = RequestMethod.GET)
+	@ResponseBody
+	public List<Series> getSkillGraph() {
+		List<String> unique = this.skillController.getAllUniqueSkills();
+		List<Series> skillGraph = new ArrayList<Series>();
+
+		for (String s : unique) {
+			skillGraph.add(new Series(s, 0));
+		}
+
+		List<Solr> solrList = this.getAll();
+		for (Solr solr : solrList) {
+			if (solr.getSkills() != null) {
+				int index = 0;
+				for (String skill : solr.getSkills()) {
+					int value = 0;
+					for (Series s : skillGraph) {
+						if (s.getName().equals(skill)) {
+							value = s.getValue();
+							index = skillGraph.indexOf(s);
+						}
+					}
+					Series update = new Series(skill, value + 1);
+					skillGraph.set(index, update);
+				}
+			}
+		}
+		return skillGraph;
+	}
+
+	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getStats", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Stat> getStats() {
@@ -173,8 +193,8 @@ public class SolrController {
 	public List<GraphMatch> getMatches(@Valid @RequestBody MatchBody matchBody) {
 		int teamSize = matchBody.getNumber();
 		List<String> skills = matchBody.getSkills();
-		if(matchBody.getNumber() == 0) {
-			teamSize = (int)this.solrRepository.count();
+		if (matchBody.getNumber() == 0) {
+			teamSize = (int) this.solrRepository.count();
 			skills = this.getAllSkills();
 		}
 		List<Solr> emps = this.getAll();
@@ -234,181 +254,6 @@ public class SolrController {
 			emps.addAll(addEmps);
 		}
 		return emps;
-	}
-
-	@SuppressWarnings("serial")
-	static class MatchBody implements Serializable {
-		int number;
-		List<String> skills;
-
-		public MatchBody(int number, List<String> skills) {
-			this.number = number;
-			this.skills = skills;
-		}
-
-		public MatchBody() {
-			this.number = 0;
-			this.skills = new ArrayList<>();
-		}
-
-		public int getNumber() {
-			return this.number;
-		}
-
-		public List<String> getSkills() {
-			return this.skills;
-		}
-
-		public void setNumber(int number) {
-			this.number = number;
-		}
-
-		public void setSkills(List<String> skills) {
-			this.skills = skills;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	class GraphMatch implements Serializable {
-		String name;
-		int value;
-
-		public GraphMatch(String name, int value) {
-			this.name = name;
-			this.value = value;
-		}
-
-		public GraphMatch() {
-			this.name = null;
-			this.value = 0;
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public int getValue() {
-			return this.value;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public void setValue(int value) {
-			this.value = value;
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (o instanceof GraphMatch) {
-				GraphMatch newO = (GraphMatch) o;
-				return this.name.equals(newO.getName());
-			}
-			return false;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	class Match implements Serializable, Comparable<Match> {
-		Solr solr;
-		double count;
-
-		public Match(Solr solr, double count) {
-			this.solr = solr;
-			this.count = count;
-		}
-
-		public Match() {
-			this.solr = null;
-			this.count = 0;
-		}
-
-		public Solr getSolr() {
-			return this.solr;
-		}
-
-		public double getCount() {
-			return this.count;
-		}
-
-		public void setSolr(Solr solr) {
-			this.solr = solr;
-		}
-
-		public void setCount(double count) {
-			this.count = count;
-		}
-
-		@Override
-		public int compareTo(Match o) {
-			return (int) ((this.count * 100) - (o.count * 100));
-		}
-	}
-
-	@SuppressWarnings("serial")
-	class Stat implements Serializable {
-		String name;
-		List<Series> series;
-
-		public Stat(String name, List<Series> series) {
-			this.name = name;
-			this.series = series;
-		}
-
-		public Stat() {
-			this.name = null;
-			this.series = new ArrayList<Series>();
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public List<Series> getSeries() {
-			return this.series;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public void setSeries(List<Series> series) {
-			this.series = series;
-		}
-	}
-
-	@SuppressWarnings("serial")
-	class Series implements Serializable {
-
-		String name;
-		int value;
-
-		public Series(String careerLevel, int i) {
-			this.name = careerLevel;
-			this.value = i;
-		}
-
-		public Series() {
-			this.name = null;
-			this.value = 0;
-		}
-
-		public String getName() {
-			return this.name;
-		}
-
-		public int getValue() {
-			return this.value;
-		}
-
-		public void setName(String name) {
-			this.name = name;
-		}
-
-		public void setValue(int value) {
-			this.value = value;
-		}
 	}
 
 }
