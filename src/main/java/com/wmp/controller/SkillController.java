@@ -1,5 +1,6 @@
 package com.wmp.controller;
 
+import com.wmp.helper.EmpIds;
 import com.wmp.helper.SkillsOnly;
 import com.wmp.model.Skill;
 import com.wmp.model.Skills;
@@ -43,7 +44,7 @@ public class SkillController {
 		List<SkillsOnly> obj = new ArrayList<SkillsOnly>(skillRepository.findDistinctBy());
 		
 		for(SkillsOnly o : obj) {
-			uniqueSkills.add(o.getSkill());
+			if(o.getSkill() != null) uniqueSkills.add(o.getSkill());
 		}
 		
 		return uniqueSkills;
@@ -53,8 +54,28 @@ public class SkillController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/skills")
 	public Skill createSkill(@Valid @RequestBody Skill skill) {
+		if(skill.getSkill() == null) {
+			return skill;
+		}
 		skill.setCreatedAt();
 		return skillRepository.save(skill);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/skills/create/{skill}")
+	public List<Skill> createSkillForEmps(@PathVariable(value = "skill") String skill, @Valid @RequestBody EmpIds empIds) {
+		if(skill.length() < 1 || empIds.getEmpIds().size() < 1) {
+			return new ArrayList<Skill>();
+		}
+		List<Skill> skillsToAdd = new ArrayList<Skill>();
+		for(Integer empId : empIds.getEmpIds()) {
+			Skill s = new Skill();
+			s.setId(empId);
+			s.setSkill(skill);
+			s.setCreatedAt();
+			skillsToAdd.add(s);
+		}
+		return skillRepository.save(skillsToAdd);
 	}
 
 	// Create a new Skill
