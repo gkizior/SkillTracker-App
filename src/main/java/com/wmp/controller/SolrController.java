@@ -19,11 +19,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wmp.helper.CareerLevelAndSkill;
 import com.wmp.helper.GraphMatch;
 import com.wmp.helper.Match;
 import com.wmp.helper.MatchBody;
 import com.wmp.helper.Series;
+import com.wmp.helper.SeriesList;
 import com.wmp.helper.Stat;
+import com.wmp.helper.StringBody;
 import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
@@ -67,6 +70,62 @@ public class SolrController {
 			skills.add(skill);
 		}
 		return skills;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping("/getAllCareerLevels")
+	public List<String> getAllCareerLevels() {
+		List<String> cls = new ArrayList<>();
+		// iterate all skills and add it to list
+		for (Solr skill : this.solrRepository.findAll()) {
+			if(!cls.contains(skill.getCareerLevel())) {
+				cls.add(skill.getCareerLevel());
+			}
+		}
+		return cls;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "/getNumOfCL")
+	public int getNumberOfCareerLevel(@Valid @RequestBody StringBody careerLevel) {
+		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s","")); 
+		if(result != null) return result.size();
+		return 0;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping("/getCLAndSkill")
+	public List<Solr> getCareerLevelAndSkill(@Valid @RequestBody CareerLevelAndSkill CLAndSkill) {
+		List<Solr> emps = new ArrayList<>();
+		// iterate all skills and add it to list
+		for (Solr skill : this.solrRepository.findAll()) {
+			if(skill.getCareerLevel().equals(CLAndSkill.getCareerLevel()) && Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
+				emps.add(skill);
+			}
+		}
+		return emps;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "/getSkillDatas")
+	public List<SeriesList> getSkillDatas(@Valid @RequestBody StringBody skill) {
+		List<SeriesList> result = new ArrayList<SeriesList>();
+		List<String> cls = this.getAllCareerLevels();
+		for(String cl : cls) {
+			List<Solr> CLAndS = this.getCareerLevelAndSkill(new CareerLevelAndSkill(cl, skill.getName()));
+			int numOfCL = this.getNumberOfCareerLevel(new StringBody(cl));
+			SeriesList sl = new SeriesList(new ArrayList<Series>(), cl);
+			Series noSkill = new Series();
+			Series yesSkill = new Series();
+			noSkill.setName("Does not know " + skill.getName());
+			yesSkill.setName("Knows " + skill.getName());
+			noSkill.setValue((numOfCL - CLAndS.size()));
+			yesSkill.setValue(CLAndS.size());
+			sl.getListSeries().add(yesSkill);
+			sl.getListSeries().add(noSkill);
+			result.add(sl);
+		}
+		return result;
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")

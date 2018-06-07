@@ -50,12 +50,15 @@ public class Solr {
 
 	@Field
 	private String[] skills;
+	
+	@Field
+	private String cfname;
 
 	public Solr() {
 	}
 
 	public Solr(String Id, String firstName, String lastName, String careerLevel, String address, String city,
-			String state, String zipcode, String created, String updated, String[] skills) {
+			String state, String zipcode, String created, String updated, String[] skills, String cfname) {
 		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -67,6 +70,7 @@ public class Solr {
 		this.created = created;
 		this.updated = updated;
 		this.skills = skills;
+		this.cfname = cfname;
 	}
 
 	public String getEmpId() {
@@ -119,6 +123,10 @@ public class Solr {
 
 	public String[] getSkills() {
 		return this.skills;
+	}
+	
+	public String getCfname() {
+		return this.cfname;
 	}
 
 	@Override

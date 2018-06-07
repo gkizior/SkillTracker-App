@@ -24,4 +24,6 @@ public interface SolrRepository extends SolrCrudRepository<Solr, String> {
 
 	@Query("Id:*?0* OR firstName:*?0* OR lastName:*?0* OR careerLevel:*?0* OR skills:*?0*")
 	List<Solr> findByQueryAnnotation(String query);
+	List<Solr> findByCareerLevelContains(String careerLevel);
+	List<Solr> findByCfnameContains(String cfname);
 }

@@ -73,6 +73,16 @@ Solr
     <field name="created" type="text_general" indexed="true" stored="true" multiValued="false"/>
     <field name="updated" type="text_general" indexed="true" stored="true"/>
     <field name="skills" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    
+    <fieldType name="word_concate" class="solr.TextField" indexed="true" stored="false">
+    	<analyzer>
+        	<charFilter class="solr.PatternReplaceCharFilterFactory" pattern="\s*" replacement=""/>
+            <tokenizer class="solr.StandardTokenizerFactory"/>
+        </analyzer>
+    </fieldType>
+    <field name="cfname" type="word_concate"/>
+    
+    <copyField source="careerLevel" dest="cfname"/>
     ```
 14. Open browser, and go to http://localhost:8983/solr/#/
 15. To stop solr, run `solr stop -all`
