@@ -114,15 +114,15 @@ public class SolrController {
 		for(String cl : cls) {
 			List<Solr> CLAndS = this.getCareerLevelAndSkill(new CareerLevelAndSkill(cl, skill.getName()));
 			int numOfCL = this.getNumberOfCareerLevel(new StringBody(cl));
-			SeriesList sl = new SeriesList(new ArrayList<Series>(), cl);
+			SeriesList sl = new SeriesList(new ArrayList<Series>(), cl, CLAndS);
 			Series noSkill = new Series();
 			Series yesSkill = new Series();
 			noSkill.setName("Does not know " + skill.getName());
 			yesSkill.setName("Knows " + skill.getName());
 			noSkill.setValue((numOfCL - CLAndS.size()));
 			yesSkill.setValue(CLAndS.size());
-			sl.getListSeries().add(yesSkill);
 			sl.getListSeries().add(noSkill);
+			sl.getListSeries().add(yesSkill);
 			result.add(sl);
 		}
 		return result;

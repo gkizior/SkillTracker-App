@@ -2,6 +2,7 @@ package com.wmp.controller;
 
 import com.wmp.helper.EmpIds;
 import com.wmp.helper.SkillsOnly;
+import com.wmp.helper.StringBody;
 import com.wmp.model.Skill;
 import com.wmp.model.Skills;
 import com.wmp.repository.SkillRepository;
@@ -126,9 +127,9 @@ public class SkillController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
-	@DeleteMapping("/skills/removeAll/{skill}")
-	public ResponseEntity<?> removeSkillBySkill(@PathVariable(value = "skill") String skill) {
-		List<Skill> skills = skillRepository.findBySkill(skill);
+	@PutMapping("/skills/removeAll")
+	public ResponseEntity<?> removeSkillBySkill(@Valid @RequestBody StringBody skill) {
+		List<Skill> skills = skillRepository.findBySkill(skill.getName());
 		skillRepository.delete(skills);
 		return ResponseEntity.ok().build();
 	}
