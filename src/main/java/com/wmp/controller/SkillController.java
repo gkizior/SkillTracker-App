@@ -9,12 +9,9 @@ import com.wmp.repository.SkillRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.ResponseEntity.BodyBuilder;
-import org.springframework.http.ResponseEntity.HeadersBuilder;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 

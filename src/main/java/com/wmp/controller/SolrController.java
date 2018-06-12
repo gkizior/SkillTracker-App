@@ -1,6 +1,5 @@
 package com.wmp.controller;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,7 +9,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +25,6 @@ import com.wmp.helper.Series;
 import com.wmp.helper.SeriesList;
 import com.wmp.helper.Stat;
 import com.wmp.helper.StringBody;
-import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
 

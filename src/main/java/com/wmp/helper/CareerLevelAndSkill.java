@@ -1,8 +1,6 @@
 package com.wmp.helper;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("serial")
 public class CareerLevelAndSkill implements Serializable {
