@@ -64,52 +64,76 @@ public class SolrController {
 	public List<Solr> getAll() {
 		List<Solr> skills = new ArrayList<>();
 		// iterate all skills and add it to list
+		List<String> sortBy = new ArrayList<String>(Arrays.asList("Intern", "Consultant", "Experienced Consultant",
+				"Senior Consultant", "Manager", "Principal", "Architect", "Senior Manager", "Senior Principal",
+				"Senior Architect", "Director", "Senior Director"));
 		for (Solr skill : this.solrRepository.findAll()) {
 			skills.add(skill);
 		}
-		return skills;
+
+		List<ArrayList<Solr>> sorting = new ArrayList<>();
+
+		int cl = 0;
+		for (String s : sortBy) {
+			sorting.add(new ArrayList<Solr>());
+			for (int i = 0; i < skills.size(); i++) {
+				if (s.equals(skills.get(i).getCareerLevel())) {
+					sorting.get(cl).add(skills.get(i));
+				}
+			}
+			cl++;
+		}
+
+		List<Solr> sorted = new ArrayList<Solr>();
+		for (ArrayList<Solr> s : sorting) {
+			sorted.addAll(s);
+		}
+
+		return sorted;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getAllCareerLevels")
 	public List<String> getAllCareerLevels() {
 		List<String> cls = new ArrayList<>();
 		// iterate all skills and add it to list
 		for (Solr skill : this.solrRepository.findAll()) {
-			if(!cls.contains(skill.getCareerLevel())) {
+			if (!cls.contains(skill.getCareerLevel())) {
 				cls.add(skill.getCareerLevel());
 			}
 		}
 		return cls;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/getNumOfCL")
 	public int getNumberOfCareerLevel(@Valid @RequestBody StringBody careerLevel) {
-		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s","")); 
-		if(result != null) return result.size();
+		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s", ""));
+		if (result != null)
+			return result.size();
 		return 0;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/getCLAndSkill")
 	public List<Solr> getCareerLevelAndSkill(@Valid @RequestBody CareerLevelAndSkill CLAndSkill) {
 		List<Solr> emps = new ArrayList<>();
 		// iterate all skills and add it to list
 		for (Solr skill : this.solrRepository.findAll()) {
-			if(skill.getCareerLevel().equals(CLAndSkill.getCareerLevel()) && Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
+			if (skill.getCareerLevel().equals(CLAndSkill.getCareerLevel())
+					&& Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
 				emps.add(skill);
 			}
 		}
 		return emps;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/getSkillDatas")
 	public List<SeriesList> getSkillDatas(@Valid @RequestBody StringBody skill) {
 		List<SeriesList> result = new ArrayList<SeriesList>();
 		List<String> cls = this.getAllCareerLevels();
-		for(String cl : cls) {
+		for (String cl : cls) {
 			List<Solr> CLAndS = this.getCareerLevelAndSkill(new CareerLevelAndSkill(cl, skill.getName()));
 			int numOfCL = this.getNumberOfCareerLevel(new StringBody(cl));
 			SeriesList sl = new SeriesList(new ArrayList<Series>(), cl, CLAndS);
@@ -159,21 +183,30 @@ public class SolrController {
 		}
 		return emps;
 	}
-	
+
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getSkillsDrop", method = RequestMethod.PUT)
 	@ResponseBody
 	public List<Solr> getSkillsDrop(@Valid @RequestBody Skills skills) throws UnsupportedOperationException {
 
 		String[] words = skills.getSkills();
-		System.out.println("");
 		List<Solr> emps = new ArrayList<>();
 		List<Solr> removeEmps = new ArrayList<>();
 
-		emps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[0].replaceAll("\\s","")));
+		if (words[0].contains(" ")) {
+			emps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[0].replaceAll("\\s", "")));
+		} else {
+			emps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[0]));
+		}
 		for (int i = 1; i < words.length; i++) {
-			removeEmps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[i].replaceAll("\\s","")));
-			emps.retainAll(removeEmps);
+			if (words[i].contains(" ")) {
+				removeEmps = new ArrayList<>(
+						this.solrRepository.findBySkillsNoSpacesContains(words[i].replaceAll("\\s", "")));
+				emps.retainAll(removeEmps);
+			} else {
+				removeEmps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[i]));
+				emps.retainAll(removeEmps);
+			}
 		}
 		return emps;
 	}
