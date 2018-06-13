@@ -116,13 +116,16 @@ public class SolrController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/getCLAndSkill")
-	public List<Solr> getCareerLevelAndSkill(@Valid @RequestBody CareerLevelAndSkill CLAndSkill) {
+	public List<Solr> getCareerLevelAndSkill(@Valid @RequestBody CareerLevelAndSkill CLAndSkill)
+			throws NullPointerException {
 		List<Solr> emps = new ArrayList<>();
 		// iterate all skills and add it to list
 		for (Solr skill : this.solrRepository.findAll()) {
-			if (skill.getCareerLevel().equals(CLAndSkill.getCareerLevel())
-					&& Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
-				emps.add(skill);
+			if (skill.getSkills() != null) {
+				if (skill.getCareerLevel().equals(CLAndSkill.getCareerLevel())
+						&& Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
+					emps.add(skill);
+				}
 			}
 		}
 		return emps;
@@ -130,7 +133,7 @@ public class SolrController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/getSkillDatas")
-	public List<SeriesList> getSkillDatas(@Valid @RequestBody StringBody skill) {
+	public List<SeriesList> getSkillDatas(@Valid @RequestBody StringBody skill) throws NullPointerException {
 		List<SeriesList> result = new ArrayList<SeriesList>();
 		List<String> cls = this.getAllCareerLevels();
 		for (String cl : cls) {
