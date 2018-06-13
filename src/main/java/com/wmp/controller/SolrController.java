@@ -25,6 +25,7 @@ import com.wmp.helper.Series;
 import com.wmp.helper.SeriesList;
 import com.wmp.helper.Stat;
 import com.wmp.helper.StringBody;
+import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
 
@@ -148,6 +149,24 @@ public class SolrController {
 	public List<Solr> getQuerySkills(@PathVariable String query) throws UnsupportedOperationException {
 
 		String[] words = query.split(" ");
+		List<Solr> emps = new ArrayList<>();
+		List<Solr> removeEmps = new ArrayList<>();
+
+		emps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[0]));
+		for (int i = 1; i < words.length; i++) {
+			removeEmps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[i]));
+			emps.retainAll(removeEmps);
+		}
+		return emps;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@RequestMapping(value = "/getSkillsDrop", method = RequestMethod.PUT)
+	@ResponseBody
+	public List<Solr> getSkillsDrop(@Valid @RequestBody Skills skills) throws UnsupportedOperationException {
+
+		String[] words = skills.getSkills();
+		System.out.println("");
 		List<Solr> emps = new ArrayList<>();
 		List<Solr> removeEmps = new ArrayList<>();
 
