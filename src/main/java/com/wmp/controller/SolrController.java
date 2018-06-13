@@ -170,9 +170,9 @@ public class SolrController {
 		List<Solr> emps = new ArrayList<>();
 		List<Solr> removeEmps = new ArrayList<>();
 
-		emps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[0]));
+		emps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[0].replaceAll("\\s","")));
 		for (int i = 1; i < words.length; i++) {
-			removeEmps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[i]));
+			removeEmps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[i].replaceAll("\\s","")));
 			emps.retainAll(removeEmps);
 		}
 		return emps;

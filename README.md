@@ -81,8 +81,9 @@ Solr
         </analyzer>
     </fieldType>
     <field name="cfname" type="word_concate"/>
-    
     <copyField source="careerLevel" dest="cfname"/>
+    <field name="skillsNoSpaces" type="word_concate" multiValued="true"/>
+    <copyField source="skills" dest="skillsNoSpaces"/>
     ```
 14. Open browser, and go to http://localhost:8983/solr/#/
 15. To stop solr, run `solr stop -all`

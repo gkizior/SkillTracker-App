@@ -16,6 +16,8 @@ import com.wmp.model.Solr;
 public interface SolrRepository extends SolrCrudRepository<Solr, String> {
 
 	List<Solr> findBySkillsContains(String skill);
+	List<Solr> findBySkillsNoSpacesContains(String skill);
+
 
 	// List<Skill> findByFirstNameContainsOrLastNameContains(String firstName,
 	// String lastName); // find documents whose docTitle ends with specified string
