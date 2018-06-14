@@ -62,7 +62,7 @@ public class SkillController {
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/skills/create")
 	public List<Skill> createSkillForEmps(@Valid @RequestBody EmpIds empIds) {
-		if(empIds.getSkill().length() < 1 || empIds.getEmpIds().size() < 1) {
+		if(empIds.getSkill().length() < 1) {
 			return new ArrayList<Skill>();
 		}
 		if(this.skillRepository.findBySkill(empIds.getSkill()).size() > 0) {
@@ -72,6 +72,13 @@ public class SkillController {
 		for(Integer empId : empIds.getEmpIds()) {
 			Skill s = new Skill();
 			s.setId(empId);
+			s.setSkill(empIds.getSkill());
+			s.setCreatedAt();
+			skillsToAdd.add(s);
+		}
+		if(empIds.getEmpIds().size() < 1) {
+			Skill s = new Skill();
+			s.setId(0);
 			s.setSkill(empIds.getSkill());
 			s.setCreatedAt();
 			skillsToAdd.add(s);

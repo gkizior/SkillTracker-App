@@ -107,7 +107,7 @@ public class SolrController {
 
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/getNumOfCL")
-	public int getNumberOfCareerLevel(@Valid @RequestBody StringBody careerLevel) {
+	public int getNumberOfCareerLevel(@Valid @RequestBody StringBody careerLevel) throws NullPointerException {
 		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s", ""));
 		if (result != null)
 			return result.size();
