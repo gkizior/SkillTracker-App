@@ -60,16 +60,44 @@ public class SkillController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping("/skills/create/{skill}")
-	public List<Skill> createSkillForEmps(@PathVariable(value = "skill") String skill, @Valid @RequestBody EmpIds empIds) {
-		if(skill.length() < 1 || empIds.getEmpIds().size() < 1) {
+	@PostMapping("/skills/create")
+	public List<Skill> createSkillForEmps(@Valid @RequestBody EmpIds empIds) {
+		if(empIds.getSkill().length() < 1 || empIds.getEmpIds().size() < 1) {
 			return new ArrayList<Skill>();
+		}
+		if(this.skillRepository.findBySkill(empIds.getSkill()).size() > 0) {
+			return this.updateSkillForEmps(empIds);
 		}
 		List<Skill> skillsToAdd = new ArrayList<Skill>();
 		for(Integer empId : empIds.getEmpIds()) {
 			Skill s = new Skill();
 			s.setId(empId);
-			s.setSkill(skill);
+			s.setSkill(empIds.getSkill());
+			s.setCreatedAt();
+			skillsToAdd.add(s);
+		}
+		return skillRepository.save(skillsToAdd);
+	}
+	
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PutMapping("/skills/update")
+	public List<Skill> updateSkillForEmps(@Valid @RequestBody EmpIds empIds) {
+		List<Skill> skills = this.skillRepository.findAll();
+		List<Integer> empsToAdd = empIds.getEmpIds();
+		for(Skill s : skills) {
+			if(s.getSkill().equals(empIds.getSkill())) {
+				if(empIds.getEmpIds().contains((int)s.getId())) {
+					empsToAdd.remove(Integer.valueOf((int)s.getId()));
+				} else {
+					this.skillRepository.delete(s);
+				}
+			}
+		}
+		List<Skill> skillsToAdd = new ArrayList<Skill>();
+		for(Integer empId : empsToAdd) {
+			Skill s = new Skill();
+			s.setId(empId);
+			s.setSkill(empIds.getSkill());
 			s.setCreatedAt();
 			skillsToAdd.add(s);
 		}

@@ -8,13 +8,16 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class EmpIds implements Serializable {
 		List<Integer> empIds;
+		String skill;
 
-		public EmpIds(List<Integer> empIds) {
+		public EmpIds(List<Integer> empIds, String skill) {
 			this.empIds = empIds;
+			this.skill = skill;
 		}
 
 		public EmpIds() {
 			this.empIds = new ArrayList<Integer>();
+			this.skill = "";
 		}
 
 		public List<Integer> getEmpIds() {
@@ -23,5 +26,13 @@ public class EmpIds implements Serializable {
 
 		public void setEmpIds(List<Integer> empIds) {
 			this.empIds = empIds;
+		}
+		
+		public String getSkill() {
+			return this.skill;
+		}
+		
+		public void setSkill(String skill) {
+			this.skill = skill;
 		}
 	}
