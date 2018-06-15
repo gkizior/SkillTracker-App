@@ -25,6 +25,7 @@ import com.wmp.helper.Series;
 import com.wmp.helper.SeriesList;
 import com.wmp.helper.Stat;
 import com.wmp.helper.StringBody;
+import com.wmp.helper.Strings;
 import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
@@ -350,19 +351,17 @@ public class SolrController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping(value = "/findEmployee/{query}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Solr> findEmployee(@PathVariable String query) throws UnsupportedOperationException {
+	@PostMapping(value = "/findEmployees")
+	public List<Solr> findEmployees(@Valid @RequestBody Strings queries) throws UnsupportedOperationException {
 
-		String[] words = query.split(" ");
+		String[] words = queries.getStrings();
 		List<Solr> emps = new ArrayList<>();
 		List<Solr> addEmps = new ArrayList<>();
 
 		emps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[0]));
 		for (int i = 1; i < words.length; i++) {
 			addEmps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[i]));
-			emps.removeAll(addEmps);
-			emps.addAll(addEmps);
+			emps.retainAll(addEmps);
 		}
 		return emps;
 	}
