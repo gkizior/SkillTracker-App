@@ -114,7 +114,7 @@ public class SkillController {
 	// Create a new Skill
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/skills/{id}")
-	public ResponseEntity<?> createSkills(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
+	public long createSkills(@PathVariable(value = "id") long empId, @Valid @RequestBody Skills skills) {
 		List<Skill> skillsToAdd = new ArrayList<Skill>();
 		for (String skill : skills.getSkills()) {
 			if (skillRepository.findByIdAndSkill(empId, skill) == null) {
@@ -123,13 +123,13 @@ public class SkillController {
 				temp.setSkill(skill);
 				skillsToAdd.add(temp);
 			} else {
-				return ResponseEntity.badRequest().build();
+				return -1;
 			}
 		}
 		for (Skill skill : skillsToAdd) {
 			skillRepository.save(skill);
 		}
-		return ResponseEntity.ok().build();
+		return empId;
 	}
 
 	// Get a Single Skill

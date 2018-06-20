@@ -2,6 +2,7 @@ package com.wmp.repository;
 
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.solr.repository.Query;
 import org.springframework.data.solr.repository.SolrCrudRepository;
 import org.springframework.stereotype.Repository;
@@ -14,11 +15,13 @@ import com.wmp.model.Solr;
 
 @Repository
 public interface SolrRepository extends SolrCrudRepository<Solr, String> {
-
+	
+	@Query("Id:?0")
+	Solr findByIdString(String Id);
+	
 	List<Solr> findBySkillsContains(String skill);
 	List<Solr> findBySkillsNoSpacesContains(String skill);
-
-
+	
 	// List<Skill> findByFirstNameContainsOrLastNameContains(String firstName,
 	// String lastName); // find documents whose docTitle ends with specified string
 
