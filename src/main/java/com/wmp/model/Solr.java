@@ -50,10 +50,10 @@ public class Solr {
 
 	@Field
 	private String[] skills;
-	
+
 	@Field
 	private String cfname;
-	
+
 	@Field
 	private String[] skillsNoSpaces;
 
@@ -61,7 +61,8 @@ public class Solr {
 	}
 
 	public Solr(String Id, String firstName, String lastName, String careerLevel, String address, String city,
-			String state, String zipcode, String created, String updated, String[] skills, String cfname, String[] skillsNoSpaces) {
+			String state, String zipcode, String created, String updated, String[] skills, String cfname,
+			String[] skillsNoSpaces) {
 		this.Id = Id;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -128,11 +129,11 @@ public class Solr {
 	public String[] getSkills() {
 		return this.skills;
 	}
-	
+
 	public String getCfname() {
 		return this.cfname;
 	}
-	
+
 	public String[] getSkillsNoSpaces() {
 		return this.skillsNoSpaces;
 	}

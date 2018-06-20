@@ -6,6 +6,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Created by Garrett Kizior on 6/6/2018.
+ */
+
 @SuppressWarnings("serial")
 public class Stat implements Serializable {
 		String name;

@@ -6,6 +6,10 @@ import java.util.List;
 
 import com.wmp.model.Solr;
 
+/**
+ * Created by Garrett Kizior on 6/7/2018.
+ */
+
 @SuppressWarnings("serial")
 public class SeriesList implements Serializable {
 

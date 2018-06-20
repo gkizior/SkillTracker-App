@@ -2,6 +2,10 @@ package com.wmp.helper;
 
 import java.io.Serializable;
 
+/**
+ * Created by Garrett Kizior on 6/6/2018.
+ */
+
 @SuppressWarnings("serial")
 public class Series implements Serializable {
 

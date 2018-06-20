@@ -2,6 +2,10 @@ package com.wmp.helper;
 
 import java.io.Serializable;
 
+/**
+ * Created by Garrett Kizior on 6/7/2018.
+ */
+
 @SuppressWarnings("serial")
 public class CareerLevelAndSkill implements Serializable {
 		String careerLevel;

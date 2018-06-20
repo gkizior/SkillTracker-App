@@ -26,7 +26,6 @@ import com.wmp.helper.SeriesList;
 import com.wmp.helper.Stat;
 import com.wmp.helper.StringBody;
 import com.wmp.helper.Strings;
-import com.wmp.model.Skills;
 import com.wmp.model.Solr;
 import com.wmp.repository.SolrRepository;
 
@@ -43,37 +42,18 @@ public class SolrController {
 	@Autowired
 	private SkillController skillController;
 
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping("/")
-	public String SpringBootSolrExample() {
-		return "Welcome to Spring Boot solr Example";
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping("/delete")
-	public String deleteAllSkills() {
-		try { // delete all skills from solr core
-			solrRepository.deleteAll();
-			return "emps deleted succesfully!";
-		} catch (Exception e) {
-			return "Failed to delete emps";
-		}
-	}
-
+	// Gets all Solr Objects
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping("/getAll")
 	public List<Solr> getAll() {
 		List<Solr> skills = new ArrayList<>();
-		// iterate all skills and add it to list
 		List<String> sortBy = new ArrayList<String>(Arrays.asList("Intern", "Consultant", "Experienced Consultant",
 				"Senior Consultant", "Manager", "Principal", "Architect", "Senior Manager", "Senior Principal",
 				"Senior Architect", "Director", "Senior Director"));
 		for (Solr skill : this.solrRepository.findAll()) {
 			skills.add(skill);
 		}
-
 		List<ArrayList<Solr>> sorting = new ArrayList<>();
-
 		int cl = 0;
 		for (String s : sortBy) {
 			sorting.add(new ArrayList<Solr>());
@@ -84,54 +64,14 @@ public class SolrController {
 			}
 			cl++;
 		}
-
 		List<Solr> sorted = new ArrayList<Solr>();
 		for (ArrayList<Solr> s : sorting) {
 			sorted.addAll(s);
 		}
-
 		return sorted;
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping("/getAllCareerLevels")
-	public List<String> getAllCareerLevels() {
-		List<String> cls = new ArrayList<>();
-		// iterate all skills and add it to list
-		for (Solr skill : this.solrRepository.findAll()) {
-			if (!cls.contains(skill.getCareerLevel())) {
-				cls.add(skill.getCareerLevel());
-			}
-		}
-		return cls;
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping(value = "/getNumOfCL")
-	public int getNumberOfCareerLevel(@Valid @RequestBody StringBody careerLevel) throws NullPointerException {
-		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s", ""));
-		if (result != null)
-			return result.size();
-		return 0;
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping("/getCLAndSkill")
-	public List<Solr> getCareerLevelAndSkill(@Valid @RequestBody CareerLevelAndSkill CLAndSkill)
-			throws NullPointerException {
-		List<Solr> emps = new ArrayList<>();
-		// iterate all skills and add it to list
-		for (Solr skill : this.solrRepository.findAll()) {
-			if (skill.getSkills() != null) {
-				if (skill.getCareerLevel().equals(CLAndSkill.getCareerLevel())
-						&& Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
-					emps.add(skill);
-				}
-			}
-		}
-		return emps;
-	}
-
+	// Gets Stat data for skills
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping(value = "/getSkillDatas")
 	public List<SeriesList> getSkillDatas(@Valid @RequestBody StringBody skill) throws NullPointerException {
@@ -154,88 +94,25 @@ public class SolrController {
 		return result;
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping("/getAllSkills")
-	public List<String> getAllSkills() {
-		List<String> skillNames = new ArrayList<String>();
-
-		for (Solr skill : this.solrRepository.findAll()) {
-			if (skill.getSkills() != null) {
-				for (String skillName : skill.getSkills()) {
-					if (!skillNames.contains(skillName)) {
-						skillNames.add(skillName);
-					}
-				}
-			}
-		}
-		return skillNames;
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping(value = "/get/{query}", method = RequestMethod.GET)
-	@ResponseBody
-	public List<Solr> getQuerySkills(@PathVariable String query) throws UnsupportedOperationException {
-
-		String[] words = query.split(" ");
-		List<Solr> emps = new ArrayList<>();
-		List<Solr> removeEmps = new ArrayList<>();
-
-		emps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[0]));
-		for (int i = 1; i < words.length; i++) {
-			removeEmps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[i]));
-			emps.retainAll(removeEmps);
-		}
-		return emps;
-	}
-
-	@CrossOrigin(origins = "http://localhost:4200")
-	@RequestMapping(value = "/getSkillsDrop", method = RequestMethod.PUT)
-	@ResponseBody
-	public List<Solr> getSkillsDrop(@Valid @RequestBody Skills skills) throws UnsupportedOperationException {
-
-		String[] words = skills.getSkills();
-		List<Solr> emps = new ArrayList<>();
-		List<Solr> removeEmps = new ArrayList<>();
-
-		if (words[0].contains(" ")) {
-			emps = new ArrayList<>(this.solrRepository.findBySkillsNoSpacesContains(words[0].replaceAll("\\s", "")));
-		} else {
-			emps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[0]));
-		}
-		for (int i = 1; i < words.length; i++) {
-			if (words[i].contains(" ")) {
-				removeEmps = new ArrayList<>(
-						this.solrRepository.findBySkillsNoSpacesContains(words[i].replaceAll("\\s", "")));
-				emps.retainAll(removeEmps);
-			} else {
-				removeEmps = new ArrayList<>(this.solrRepository.findBySkillsContains(words[i]));
-				emps.retainAll(removeEmps);
-			}
-		}
-		return emps;
-	}
-
+	// Gets the Employee solr object with id
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getEmployee/{employeeId}", method = RequestMethod.GET)
 	@ResponseBody
 	public Solr getEmployee(@PathVariable String employeeId) throws UnsupportedOperationException {
-
 		Solr emps = this.solrRepository.findOne(employeeId);
-
 		return emps;
 	}
 
+	// Gets data to construct a skill graph
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getSkillGraph", method = RequestMethod.GET)
 	@ResponseBody
 	public List<Series> getSkillGraph() {
 		List<String> unique = this.skillController.getAllUniqueSkills();
 		List<Series> skillGraph = new ArrayList<Series>();
-
 		for (String s : unique) {
 			skillGraph.add(new Series(s, 0));
 		}
-
 		List<Solr> solrList = this.getAll();
 		for (Solr solr : solrList) {
 			if (solr.getSkills() != null) {
@@ -256,6 +133,7 @@ public class SolrController {
 		return skillGraph;
 	}
 
+	// Gets all stats for angular graphs
 	@CrossOrigin(origins = "http://localhost:4200")
 	@RequestMapping(value = "/getStats", method = RequestMethod.GET)
 	@ResponseBody
@@ -300,6 +178,7 @@ public class SolrController {
 		return stats;
 	}
 
+	// Gets match data for angular graphs
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PostMapping("/getMatches")
 	public List<GraphMatch> getMatches(@Valid @RequestBody MatchBody matchBody) {
@@ -311,7 +190,6 @@ public class SolrController {
 		}
 		List<Solr> emps = this.getAll();
 		List<Match> result = new ArrayList<Match>();
-
 		for (Solr emp : emps) {
 			if (emp.getSkills() != null) {
 				int number = 0;
@@ -336,6 +214,21 @@ public class SolrController {
 		}
 	}
 
+	// Get Employees that match query
+	@CrossOrigin(origins = "http://localhost:4200")
+	@PostMapping(value = "/getEmployees")
+	public List<Solr> getEmployees(@Valid @RequestBody Strings queries) throws UnsupportedOperationException {
+		String[] words = queries.getStrings();
+		List<Solr> emps = new ArrayList<>();
+		List<Solr> addEmps = new ArrayList<>();
+		emps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[0]));
+		for (int i = 1; i < words.length; i++) {
+			addEmps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[i]));
+			emps.retainAll(addEmps);
+		}
+		return emps;
+	}
+
 	public List<GraphMatch> getGraphMatch(List<Match> matches) {
 		List<GraphMatch> gMatch = new ArrayList<>();
 		for (Match match : matches) {
@@ -350,20 +243,52 @@ public class SolrController {
 		return gMatch;
 	}
 
-	@CrossOrigin(origins = "http://localhost:4200")
-	@PostMapping(value = "/findEmployees")
-	public List<Solr> findEmployees(@Valid @RequestBody Strings queries) throws UnsupportedOperationException {
+	// Gets a list of all unique career levels
+	public List<String> getAllCareerLevels() {
+		List<String> cls = new ArrayList<>();
+		// iterate all skills and add it to list
+		for (Solr skill : this.solrRepository.findAll()) {
+			if (!cls.contains(skill.getCareerLevel())) {
+				cls.add(skill.getCareerLevel());
+			}
+		}
+		return cls;
+	}
 
-		String[] words = queries.getStrings();
+	// Gets the number of employees at a certain career level
+	public int getNumberOfCareerLevel(StringBody careerLevel) throws NullPointerException {
+		List<Solr> result = this.solrRepository.findByCfnameContains(careerLevel.getName().replaceAll("\\s", ""));
+		if (result != null)
+			return result.size();
+		return 0;
+	}
+
+	// Gets a list of Employees with a certain career level and skill
+	public List<Solr> getCareerLevelAndSkill(CareerLevelAndSkill CLAndSkill) throws NullPointerException {
 		List<Solr> emps = new ArrayList<>();
-		List<Solr> addEmps = new ArrayList<>();
-
-		emps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[0]));
-		for (int i = 1; i < words.length; i++) {
-			addEmps = new ArrayList<>(this.solrRepository.findByQueryAnnotation(words[i]));
-			emps.retainAll(addEmps);
+		for (Solr skill : this.solrRepository.findAll()) {
+			if (skill.getSkills() != null) {
+				if (skill.getCareerLevel().equals(CLAndSkill.getCareerLevel())
+						&& Arrays.asList(skill.getSkills()).contains(CLAndSkill.getSkill())) {
+					emps.add(skill);
+				}
+			}
 		}
 		return emps;
 	}
 
+	// Gets list of all skill names
+	public List<String> getAllSkills() {
+		List<String> skillNames = new ArrayList<String>();
+		for (Solr skill : this.solrRepository.findAll()) {
+			if (skill.getSkills() != null) {
+				for (String skillName : skill.getSkills()) {
+					if (!skillNames.contains(skillName)) {
+						skillNames.add(skillName);
+					}
+				}
+			}
+		}
+		return skillNames;
+	}
 }

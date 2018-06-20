@@ -19,6 +19,10 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+/**
+ * Created by Garrett Kizior on 6/19/2018.
+ */
+
 @Service
 public class SolrService {
 
@@ -39,6 +43,10 @@ public class SolrService {
 		solr.setParser(new XMLResponseParser());
 
 		Employee e = this.employeeRepository.findById(id);
+
+		if (e == null)
+			return;
+
 		List<Skill> s = this.skillRepository.findById(id);
 
 		String[] sArray = new String[s.size()];
@@ -68,13 +76,13 @@ public class SolrService {
 			e1.printStackTrace();
 		}
 	}
-	
+
 	@Transactional
 	public void deleteIndex(Long id) {
 		String urlString = "http://localhost:8983/solr/skilltracker";
 		HttpSolrClient solr = new HttpSolrClient.Builder(urlString).build();
 		solr.setParser(new XMLResponseParser());
-		
+
 		Solr current = repository.findByIdString("" + id);
 		try {
 			if (current != null) {

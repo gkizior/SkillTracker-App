@@ -1,8 +1,11 @@
 package com.wmp.helper;
 
 import java.io.Serializable;
-
 import com.wmp.model.Solr;
+
+/**
+ * Created by Garrett Kizior on 6/6/2018.
+ */
 
 @SuppressWarnings("serial")
 public class Match implements Serializable, Comparable<Match> {

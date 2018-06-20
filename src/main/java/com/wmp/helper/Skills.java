@@ -1,4 +1,4 @@
-package com.wmp.model;
+package com.wmp.helper;
 
 import java.io.Serializable;
 
