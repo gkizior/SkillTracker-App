@@ -91,11 +91,13 @@ public class SkillController {
 	public List<Skill> updateSkillForEmps(@Valid @RequestBody EmpIds empIds) {
 		List<Skill> skills = this.skillRepository.findAll();
 		List<Integer> empsToAdd = empIds.getEmpIds();
+		List<Skill> skillsToReindex = new ArrayList<Skill>();
 		for(Skill s : skills) {
 			if(s.getSkill().equals(empIds.getSkill())) {
 				if(empIds.getEmpIds().contains((int)s.getId())) {
 					empsToAdd.remove(Integer.valueOf((int)s.getId()));
 				} else {
+					skillsToReindex.add(s);
 					this.skillRepository.delete(s);
 				}
 			}
@@ -106,9 +108,11 @@ public class SkillController {
 			s.setId(empId);
 			s.setSkill(empIds.getSkill());
 			s.setCreatedAt();
+			skillsToReindex.add(s);
 			skillsToAdd.add(s);
 		}
-		return skillRepository.save(skillsToAdd);
+		skillRepository.save(skillsToAdd);
+		return skillsToReindex;
 	}
 
 	// Create a new Skill
@@ -141,10 +145,10 @@ public class SkillController {
 	// Delete a Skill
 	@CrossOrigin(origins = "http://localhost:4200")
 	@DeleteMapping("/skills/{id}")
-	public ResponseEntity<?> deleteSkill(@PathVariable(value = "id") long id) {
+	public long deleteSkill(@PathVariable(value = "id") long id) {
 		List<Skill> skills = skillRepository.findById(id);
 		skillRepository.delete(skills);
-		return ResponseEntity.ok().build();
+		return id;
 	}
 
 	// Delete a Skill
@@ -160,10 +164,10 @@ public class SkillController {
 	
 	@CrossOrigin(origins = "http://localhost:4200")
 	@PutMapping("/skills/removeAll")
-	public ResponseEntity<?> removeSkillBySkill(@Valid @RequestBody StringBody skill) {
+	public List<Skill> removeSkillBySkill(@Valid @RequestBody StringBody skill) {
 		List<Skill> skills = skillRepository.findBySkill(skill.getName());
 		skillRepository.delete(skills);
-		return ResponseEntity.ok().build();
+		return skills;
 	}
 	
 }

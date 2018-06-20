@@ -11,9 +11,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration;
 
 import com.wmp.model.Employee;
+import com.wmp.model.Skill;
 import com.wmp.service.SolrService;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -25,59 +28,109 @@ import javax.annotation.Resource;
 @Aspect
 @Configuration
 public class AfterAOPAspect {
-	
+
 	int beforeMessages = 0;
-	
+
 	@Resource
 	SolrService sService;
 
-	@After("execution(* com.wmp.controller.EmployeeController.*(..))")
-	public void afterEmployee(JoinPoint joinpoint) throws IOException {
-//		if(joinpoint.getSignature().getName().contains("get")) return;
-//		System.out.println("EmployeeController - " + joinpoint.getSignature().getName());
-//		DefaultHttpClient client = new DefaultHttpClient();
-//		client.execute(new HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
-//		client.getConnectionManager().shutdown();
-//		client.close();
-	}
+	// @After("execution(* com.wmp.controller.EmployeeController.*(..))")
+	// public void afterEmployee(JoinPoint joinpoint) throws IOException {
+	// if(joinpoint.getSignature().getName().contains("get")) return;
+	// System.out.println("EmployeeController - " +
+	// joinpoint.getSignature().getName());
+	// DefaultHttpClient client = new DefaultHttpClient();
+	// client.execute(new
+	// HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
+	// client.getConnectionManager().shutdown();
+	// client.close();
+	// }
+	//
+	// @After("execution(* com.wmp.controller.SkillController.*(..))")
+	// public void afterSkill(JoinPoint joinpoint) throws IOException {
+	// if(joinpoint.getSignature().getName().contains("get")) return;
+	// System.out.println("SKillController - " +
+	// joinpoint.getSignature().getName());
+	// DefaultHttpClient client = new DefaultHttpClient();
+	// client.execute(new
+	// HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
+	// client.getConnectionManager().shutdown();
+	// client.close();
+	// }
 
-	@After("execution(* com.wmp.controller.SkillController.*(..))")
-	public void afterSkill(JoinPoint joinpoint) throws IOException {
-//		if(joinpoint.getSignature().getName().contains("get")) return;
-//		System.out.println("SKillController - " + joinpoint.getSignature().getName());
-//		DefaultHttpClient client = new DefaultHttpClient();
-//		client.execute(new HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
-//		client.getConnectionManager().shutdown();
-//		client.close();
-	}
-	
 	@AfterReturning(value = "execution(* com.wmp.controller.EmployeeController.createEmployee(..))", returning = "returnValue")
 	public void createEmployee(JoinPoint joinpoint, Object returnValue) {
-		this.sService.addToIndex(((Employee) returnValue).getId());
+		this.sService.updateIndex(((Employee) returnValue).getId());
 	}
-	
+
 	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.createSkills(..))", returning = "returnValue")
 	public void createSkills(JoinPoint joinpoint, Object returnValue) {
-		System.out.println(joinpoint.getArgs());
-		System.out.println("");
-		this.sService.addToIndex((long) returnValue);
+		this.sService.updateIndex((long) returnValue);
 	}
-	
+
+	@AfterReturning(value = "execution(* com.wmp.controller.EmployeeController.updateEmployee(..))", returning = "returnValue")
+	public void updateEmployee(JoinPoint joinpoint, Object returnValue) {
+		this.sService.updateIndex(((Employee) returnValue).getId());
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.deleteSkill(..))", returning = "returnValue")
+	public void deleteSkill(JoinPoint joinpoint, Object returnValue) {
+		this.sService.updateIndex((long) returnValue);
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.EmployeeController.deleteEmployee(..))", returning = "returnValue")
+	public void deleteEmployee(JoinPoint joinpoint, Object returnValue) {
+		this.sService.updateIndex((long) returnValue);
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.createSkillForEmps(..))", returning = "returnValue")
+	public void createSkillForEmps(JoinPoint joinpoint, Object returnValue) {
+		@SuppressWarnings("unchecked")
+		List<Skill> skills = (List<Skill>) returnValue;
+		for (Skill s : skills) {
+			this.sService.updateIndex(s.getId());
+		}
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.createSkill(..))", returning = "returnValue")
+	public void createSkill(JoinPoint joinpoint, Object returnValue) {
+		Skill skill = (Skill) returnValue;
+		this.sService.updateIndex(skill.getId());
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.updateSkillForEmps(..))", returning = "returnValue")
+	public void updateSkillForEmps(JoinPoint joinpoint, Object returnValue) {
+		@SuppressWarnings("unchecked")
+		List<Skill> skills = (List<Skill>) returnValue;
+		for (Skill s : skills) {
+			this.sService.updateIndex(s.getId());
+		}
+	}
+
+	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.removeSkillBySkill(..))", returning = "returnValue")
+	public void removeSkillBySkill(JoinPoint joinpoint, Object returnValue) {
+		@SuppressWarnings("unchecked")
+		List<Skill> skills = (List<Skill>) returnValue;
+		for (Skill s : skills) {
+			this.sService.updateIndex(s.getId());
+		}
+	}
+
 	@Before("execution(* com.wmp.controller.SkillController.*(..))")
 	public void beforeSkill(JoinPoint joinpoint) throws IOException {
-		this.printMessage("SkillController  ----", joinpoint.getSignature().getName());
+		this.printMessage("SkillController", joinpoint.getSignature().getName());
 	}
-	
+
 	@Before("execution(* com.wmp.controller.EmployeeController.*(..))")
 	public void beforeEmployee(JoinPoint joinpoint) throws IOException {
-		this.printMessage("EmployeeController  ====", joinpoint.getSignature().getName());
+		this.printMessage("EmployeeController", joinpoint.getSignature().getName());
 	}
-	
+
 	@Before("execution(* com.wmp.controller.SolrController.*(..))")
 	public void beforeSolr(JoinPoint joinpoint) throws IOException {
 		this.printMessage("SolrController", joinpoint.getSignature().getName());
 	}
-	
+
 	public void printMessage(String controller, String function) {
 		this.beforeMessages++;
 		System.out.println(this.beforeMessages + "  " + controller + " - " + function);

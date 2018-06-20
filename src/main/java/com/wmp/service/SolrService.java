@@ -20,21 +20,20 @@ import java.util.List;
 import javax.annotation.Resource;
 
 @Service
-public class SolrService implements SolrServiceInterface {
+public class SolrService {
 
 	@Resource
 	private SolrRepository repository;
-	
+
 	@Autowired
 	EmployeeRepository employeeRepository;
 
 	@Resource
 	SkillRepository skillRepository;
-	
+
 	@Transactional
-	@Override
-	public void addToIndex(Long id) {
-		
+	public void updateIndex(Long id) {
+
 		String urlString = "http://localhost:8983/solr/skilltracker";
 		HttpSolrClient solr = new HttpSolrClient.Builder(urlString).build();
 		solr.setParser(new XMLResponseParser());
@@ -53,45 +52,41 @@ public class SolrService implements SolrServiceInterface {
 		Solr add = new Solr("" + id, e.getFirstName(), e.getLastName(), e.getCareerLevel(), e.getAddress(), e.getCity(),
 				e.getState(), e.getZipcode(), e.getCreatedAt().toString(), e.getUpdatedAt().toString(), sArray,
 				e.getCareerLevel(), sArray);
-		
+
 		Solr current = repository.findByIdString("" + id);
-		if(current == null) {
-			//repository.save(add);
-			try {
+		try {
+			if (current == null) {
 				solr.addBean(add);
 				solr.commit();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (SolrServerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			System.out.println("WWWWWWWWWWW   current not found");
-		} else {
-			try {
+			} else {
 				solr.deleteByQuery("Id:" + id);
 				solr.commit();
 				solr.addBean(add);
 				solr.commit();
-			} catch (SolrServerException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			//repository.delete(current);
-			//repository.save(add);
-			System.out.println("WWWWWWWWWWW   current found and deleted");
+		} catch (SolrServerException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 	}
-
-	@Override
-	public void deleteFromIndex(Long id) {
-		// TODO Auto-generated method stub
-
+	
+	@Transactional
+	public void deleteIndex(Long id) {
+		String urlString = "http://localhost:8983/solr/skilltracker";
+		HttpSolrClient solr = new HttpSolrClient.Builder(urlString).build();
+		solr.setParser(new XMLResponseParser());
+		
+		Solr current = repository.findByIdString("" + id);
+		try {
+			if (current != null) {
+				solr.deleteByQuery("Id:" + id);
+				solr.commit();
+			}
+		} catch (SolrServerException e1) {
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 	}
-
-	// Add methods here
 }
