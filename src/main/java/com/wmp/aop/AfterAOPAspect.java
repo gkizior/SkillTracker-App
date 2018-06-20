@@ -56,7 +56,7 @@ public class AfterAOPAspect {
 
 	@AfterReturning(value = "execution(* com.wmp.controller.EmployeeController.deleteEmployee(..))", returning = "returnValue")
 	public void deleteEmployee(JoinPoint joinpoint, Object returnValue) {
-		this.sService.updateIndex((long) returnValue);
+		this.sService.deleteIndex((long) returnValue);
 	}
 
 	@AfterReturning(value = "execution(* com.wmp.controller.SkillController.createSkillForEmps(..))", returning = "returnValue")

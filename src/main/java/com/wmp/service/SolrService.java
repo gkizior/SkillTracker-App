@@ -44,9 +44,7 @@ public class SolrService {
 		String[] sArray = new String[s.size()];
 		int i = 0;
 		for (Skill sElement : s) {
-			System.out.println(i);
 			sArray[i++] = sElement.getSkill();
-			System.out.print(sArray[i - 1]);
 		}
 
 		Solr add = new Solr("" + id, e.getFirstName(), e.getLastName(), e.getCareerLevel(), e.getAddress(), e.getCity(),
