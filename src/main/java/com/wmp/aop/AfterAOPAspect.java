@@ -34,30 +34,6 @@ public class AfterAOPAspect {
 	@Resource
 	SolrService sService;
 
-	// @After("execution(* com.wmp.controller.EmployeeController.*(..))")
-	// public void afterEmployee(JoinPoint joinpoint) throws IOException {
-	// if(joinpoint.getSignature().getName().contains("get")) return;
-	// System.out.println("EmployeeController - " +
-	// joinpoint.getSignature().getName());
-	// DefaultHttpClient client = new DefaultHttpClient();
-	// client.execute(new
-	// HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
-	// client.getConnectionManager().shutdown();
-	// client.close();
-	// }
-	//
-	// @After("execution(* com.wmp.controller.SkillController.*(..))")
-	// public void afterSkill(JoinPoint joinpoint) throws IOException {
-	// if(joinpoint.getSignature().getName().contains("get")) return;
-	// System.out.println("SKillController - " +
-	// joinpoint.getSignature().getName());
-	// DefaultHttpClient client = new DefaultHttpClient();
-	// client.execute(new
-	// HttpGet("http://localhost:8983/solr/skilltracker/dataimport?command=full-import"));
-	// client.getConnectionManager().shutdown();
-	// client.close();
-	// }
-
 	@AfterReturning(value = "execution(* com.wmp.controller.EmployeeController.createEmployee(..))", returning = "returnValue")
 	public void createEmployee(JoinPoint joinpoint, Object returnValue) {
 		this.sService.updateIndex(((Employee) returnValue).getId());
